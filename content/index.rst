@@ -42,16 +42,9 @@ levels, depending on your interest.
    :widths: auto
    :delim: ;
 
-   xx min ; :doc:`laptop-to-cluster` Syncing workflows
-   xx min ; :doc:`sshfs`
-   xx min ; :doc:`interactive-work`
-   xx min ; :doc:`remote-kernels`
-   xx min ; :doc:`benchmarking`
-   xx min ; :doc:`monitoring-io`
-   xx min ; :doc:`container-and-archive-formats`
-   xx min ; :doc:`local-storage`
-   xx min ; :doc:`parallelizing-without-parallelizing`
-   xx min ; :doc:`automation`
+   50 min ; :doc:`laptop-to-cluster` Benchmarking & choosing job parameters
+   50 min ; :doc:`I/O best practices`
+
 
 
 .. toctree::
