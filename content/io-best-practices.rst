@@ -40,6 +40,14 @@ Data Format Demo
 Shows the effect of a proper data format. Also large number of files vs
 one big file.
 
+- strace | grep to what files are accessed
+
+dataset.zip
+https://github.com/webdataset/tarp
+zip -> folder -> put files in random order to tars -> read webdataset
+
+find my_project_dir | wc -l
+find my_project_dir | wc -l
 
 I/O Workflows
 -------------
