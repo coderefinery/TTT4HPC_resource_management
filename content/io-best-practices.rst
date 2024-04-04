@@ -34,20 +34,29 @@ the overall path.
 - networked filesystems tend to be best at large files, bad at many small
 
 
-Data Format Demo
-----------------
+Data Format Demos
+-----------------
 
 Shows the effect of a proper data format. Also large number of files vs
 one big file.
 
-- strace | grep to what files are accessed
+- https://github.com/coderefinery/ttt4hpc-io-examples
 
-dataset.zip
-https://github.com/webdataset/tarp
-zip -> folder -> put files in random order to tars -> read webdataset
+- Check file system calls using strace
+   strace -c -e trace=file python aggregate_files.py
 
-find my_project_dir | wc -l
-find my_project_dir | wc -l
+- Try creating and reading a large file locally and on lustre
+
+   ``` bash
+   time dd if=/dev/zero of=largefile bs=1024M count=50
+   ```
+
+- Try reading the large file
+
+   ``` bash
+   time md5sum largefile
+   ```
+
 
 I/O Workflows
 -------------
@@ -66,6 +75,11 @@ Local Disks and RAM Disks
 -------------------------
 
 - Demonstrate moving data to a local disk before running
+
+``` bash
+unzip -d /tmp/data data.zip
+python train_model.py --data /tmp/data
+```
 
 - One IO operation on the shared system, then fast
 
