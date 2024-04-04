@@ -1,4 +1,4 @@
-Lesson name
+I/O Best Practices
 ===========
 
 .. objectives::
