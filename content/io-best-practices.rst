@@ -166,10 +166,49 @@ python train_model.py --data /tmp/data
 Machine Learning and Large data
 -------------------------------
 
-Demonstrate webdatasets for somewhat randomized access
+Training large machine learning models requires a lot of data.
+Storing and accessing the data can easily become a bottleneck. It's
+easy to starve the GPUs for data just because accessing the input
+files on disk is too slow.
 
- - Not actually random reads, but sufficiently random for most
-   machine learning pipelines
+Different frameworks have their own formats, but they work in
+similar ways. They allow storing large datasets in shards, each
+containing several gigabytes of data. Sharding allows splitting the
+data accross disks and reading with multiple threads. Data can also
+be randomized within a batch or a shard.
+
+Webdataset does this for PyTorch. It uses the POSIX tar format,
+making it easy to handle on most HPC systems.
+
+
+Demo in the webdataset folder.
+
+1. Creating a dataset
+
+... code-block:: bash
+   python create_dataset.py
+
+2. Reading a sharded dataset
+
+... code-block:: bash
+   python imagenet.py
+
+
+Note that the data does not need to be downlaoded and stored
+locally for webdataset. The library can also handle http addresses
+directly, and has a protocol for general UNIX pipes.
+
+... code-block:: python
+   wds.WebDataset("filename.tar")
+
+is equivalent to
+
+... code-block:: python
+   wds.WebDataset("pipe:cat filename.tar")
+
+This makes webdataset very general and flexible. Unfortunately, 
+though, the data needs to be stored in a tar file.
+
 
 
 Summary
