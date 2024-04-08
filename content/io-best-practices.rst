@@ -1,5 +1,5 @@
 I/O Best Practices
-===========
+==================
 
 .. objectives::
 
@@ -126,11 +126,15 @@ I/O Workflows
 A profiler can detect I/O patterns and this can be useful for identifying
 bottlenecks. However, this is mostly a problem of workflows.
 
- - shared file system
-How does a shared file system actually work. Set up a mental model.
+How would you set up a file system that can be accessed from a large
+number of nodes?
 
- - A large number of small files is a problem
- - But so is random access inside a large file
+ - How does a network file system work? What is Lustre?
+
+ - How do I study or profile I/O patterns?
+
+ - What can I do to optimize it?
+
 
 
 Local Disks and RAM Disks
