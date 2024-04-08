@@ -60,6 +60,8 @@ levels, depending on your interest.
    instructor-guide
    io-best-practices
 
+   exercises
+
 
 
 .. _learner-personas:
