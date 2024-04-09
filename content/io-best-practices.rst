@@ -94,7 +94,7 @@ files have to be read in order. Otherwise we would still generate A
 large number of file system calls.
 
 ... code-block:: python
-   python read_archive.py
+   strace -c -e trace=file python read_archive.py
 
 
 4. Random access
@@ -105,7 +105,7 @@ the archive is not that helpful, since we cannot stream the
 contents.
 
 ... code-block:: python
-   python read_archive_random.py
+   strace -c -e trace=file python read_archive_random.py
 
 This is not great. How would you avoid reading the files out of 
 order?
@@ -115,7 +115,7 @@ it's usually good enough to read the file in chunks and shuffle the
 chunks in memory.
 
 ... code-block:: python
-   python read_random_chunked.py
+   strace -c -e trace=file python read_random_chunked.py
 
 
 
