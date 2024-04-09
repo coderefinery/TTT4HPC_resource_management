@@ -15,6 +15,10 @@ I/O Best Practices
    You can find the demo code and setup instructions at
    https://github.com/coderefinery/ttt4hpc-io-examples.
 
+   If you wish to run the code, you will need Python and the
+   packages listed in requirements.txt. You can install them with
+   `pip install -r requirements.txt`.
+
 
 In this lesson we discuss common I/O problems, diagnosing them and
 avoiding them. I/O issues are usually about how the workflow is
