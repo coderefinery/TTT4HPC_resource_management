@@ -53,7 +53,7 @@ faster.
 
 1. Setup
 
-... code-block:: bash
+.. code-block:: bash
    # Clone the repository and setup
    git clone https://github.com/coderefinery/ttt4hpc-io-examples
    cd ttt4hpc-io-examples
@@ -76,7 +76,7 @@ dataframe. The approach in `read_files_naive.py` is the simplest
 way we would first write this. The version in `read_files.py` only
 reads the files in the loop, and gives a more fair comparison.
 
-... code-block:: python
+.. code-block:: python
    strace -c -e trace=file python read_files.py
 
 strace shows the number of file system calls. In this case we count
@@ -93,7 +93,7 @@ We use the streaming mode for reading the archive. This means the
 files have to be read in order. Otherwise we would still generate A
 large number of file system calls.
 
-... code-block:: python
+.. code-block:: python
    strace -c -e trace=file python read_archive.py
 
 
@@ -104,7 +104,7 @@ in training machine learning models. In this case reading from the
 the archive is not that helpful, since we cannot stream the
 contents.
 
-... code-block:: python
+.. code-block:: python
    strace -c -e trace=file python read_archive_random.py
 
 This is not great. How would you avoid reading the files out of 
@@ -114,7 +114,7 @@ In this case, the whole data fits in memory. Even if it didn't,
 it's usually good enough to read the file in chunks and shuffle the
 chunks in memory.
 
-... code-block:: python
+.. code-block:: python
    strace -c -e trace=file python read_random_chunked.py
 
 
@@ -201,12 +201,12 @@ Demo in the webdataset folder.
 
 1. Creating a dataset
 
-... code-block:: bash
+.. code-block:: bash
    python create_dataset.py
 
 2. Reading a sharded dataset
 
-... code-block:: bash
+.. code-block:: bash
    python imagenet.py
 
 
@@ -214,12 +214,12 @@ Note that the data does not need to be downlaoded and stored
 locally for webdataset. The library can also handle http addresses
 directly, and has a protocol for general UNIX pipes.
 
-... code-block:: python
+.. code-block:: python
    wds.WebDataset("filename.tar")
 
 is equivalent to
 
-... code-block:: python
+.. code-block:: python
    wds.WebDataset("pipe:cat filename.tar")
 
 This makes webdataset very general and flexible. Unfortunately, 

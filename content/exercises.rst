@@ -9,17 +9,17 @@ This code runs a parameter search with a fast simulation step. The
 function `simulate` runs on GPUs and is very fast. How would you
 improve the I/O performance of this code?
 
-```python
-for parameter in parameters:
-    for datafile in datafiles:
-        with open(datafile) as f:
-            data = f.read()
+.. code-block:: python
+    for parameter in parameters:
+        for datafile in datafiles:
+            with open(datafile) as f:
+                data = f.read()
+    
+            result = simulate(data, parameter)
+    
+            with open('results.json', 'a') as f:
+                f.write(json.dumps(result))
 
-        result = simulate(data, parameter)
-
-        with open('results.json', 'a') as f:
-            f.write(json.dumps(result))
-```
 
 Exercise 2.2
 ------------
