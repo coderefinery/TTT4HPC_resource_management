@@ -10,13 +10,14 @@ function `simulate` runs on GPUs and is very fast. How would you
 improve the I/O performance of this code?
 
 .. code-block:: python
+    
     for parameter in parameters:
         for datafile in datafiles:
             with open(datafile) as f:
                 data = f.read()
-    
+
             result = simulate(data, parameter)
-    
+
             with open('results.json', 'a') as f:
                 f.write(json.dumps(result))
 

@@ -54,6 +54,7 @@ faster.
 1. Setup
 
 .. code-block:: bash
+
    # Clone the repository and setup
    git clone https://github.com/coderefinery/ttt4hpc-io-examples
    cd ttt4hpc-io-examples
@@ -77,6 +78,7 @@ way we would first write this. The version in `read_files.py` only
 reads the files in the loop, and gives a more fair comparison.
 
 .. code-block:: python
+
    strace -c -e trace=file python read_files.py
 
 strace shows the number of file system calls. In this case we count
@@ -94,6 +96,7 @@ files have to be read in order. Otherwise we would still generate A
 large number of file system calls.
 
 .. code-block:: python
+
    strace -c -e trace=file python read_archive.py
 
 
@@ -105,6 +108,7 @@ the archive is not that helpful, since we cannot stream the
 contents.
 
 .. code-block:: python
+
    strace -c -e trace=file python read_archive_random.py
 
 This is not great. How would you avoid reading the files out of 
@@ -115,6 +119,7 @@ it's usually good enough to read the file in chunks and shuffle the
 chunks in memory.
 
 .. code-block:: python
+
    strace -c -e trace=file python read_random_chunked.py
 
 
@@ -159,25 +164,25 @@ Local Disks and RAM Disks
 
 - Demonstrate moving data to a local disk before running
 
-``` bash
-unzip -d /tmp/data data.zip
-python train_model.py --data /tmp/data
-```
+.. code-block:: bash
+
+   unzip -d /tmp/data data.zip
+   python train_model.py --data /tmp/data
 
 - One IO operation on the shared system, then fast
 
 
 - Try creating and reading a large file locally and on lustre
 
-   ``` bash
-   time dd if=/dev/zero of=largefile bs=1024M count=50
-   ```
+   .. code-block:: bash
+
+      time dd if=/dev/zero of=largefile bs=1024M count=50
 
 - Try reading the large file
 
-   ``` bash
-   time md5sum largefile
-   ```
+   .. code-block:: bash
+
+      time md5sum largefile
 
 
 Machine Learning and Large data
@@ -203,11 +208,13 @@ Demo in the webdataset folder.
 1. Creating a dataset
 
 .. code-block:: bash
+
    python create_dataset.py
 
 2. Reading a sharded dataset
 
 .. code-block:: bash
+
    python imagenet.py
 
 
