@@ -7,10 +7,6 @@ I/O Best Practices
    * One large file is usually faster than many small files
    * Local hard disks and ramdisks can be much faster
 
-   This lesson is largely a demonstration with some exercises. We
-   recommend following the demonstration. It is possible to try
-   running the demonstration yourself, but this is not intended as
-   a type along.
 
 .. prerequisites::
 
@@ -20,15 +16,14 @@ I/O Best Practices
    https://github.com/coderefinery/ttt4hpc-io-examples.
 
 
+In this lesson we discuss common I/O problems, diagnosing them and
+avoiding them. I/O issues are usually about how the workflow is
+structured and can be fixed or alleviated by restucturing, moving
+the reads and writes to move convenient times or using the right
+storage system.
 
-First sentence that summarizes the lesson, suitable for preview text.
-A first paragraph really motivating why you would need the material
-presented on this page, and why it is exciting. Don't go into details.
-
-Then, another paragraph going into the big picture of what you will do
-and how you will do it. Not details, but enough so that someone knows
-the overall path.
-
+This lesson is mostly a demonstration, with some general discussion.
+We recommend you follow the demonstration and 
 
 - Filesystem can be the slowest part of many jobs
 - networked filesystems tend to be best at large files, bad at many small
