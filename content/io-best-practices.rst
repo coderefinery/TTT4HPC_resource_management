@@ -122,6 +122,9 @@ chunks in memory.
 I/O Workflows
 -------------
 
+ - How does a network file system work? What is Lustre? What happens
+   when I ask for the contents of a file?
+
  - Even a normal file system is generally much slower than a RAM, 
    CPUs or GPUs. Computations have to wait for many cycles for each
    I/O operation.
@@ -132,8 +135,6 @@ I/O Workflows
  - Bad I/O hampers interactive use. Waiting for a file to load can
    be frustrating.
 
- - How does a network file system work? What is Lustre? What happens
-   when I ask for the contents of a file?
 
 
 Common issues:
