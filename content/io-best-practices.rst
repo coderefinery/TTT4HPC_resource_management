@@ -122,7 +122,7 @@ chunks in memory.
 I/O Workflows
 -------------
 
- - Even a norma- file system is generally much slower than a RAM, 
+ - Even a normal file system is generally much slower than a RAM, 
    CPUs or GPUs. Computations have to wait for many cycles for each
    I/O operation.
 
@@ -135,20 +135,22 @@ I/O Workflows
  - How does a network file system work? What is Lustre? What happens
    when I ask for the contents of a file?
 
- - 
- 
+
+Common issues:
+
+ - Order of operations: Reading a file many times because the
+   function is called in a loop.
+ - Jenga: When reading the same data again and again in loop, for
+   machine learning for example. One epoch may not show the issue.
+ - Carrying everything with you: You never delete any input data.
+   Everything is kept in ram and takes space.
+ - "She'll have the steak": Data format is chosen for manual 
+   when the amount of data is small, or for inspection and plotting.
+   The format is not optimal for the actual use case.
 
 A profiler can detect I/O patterns and this can be useful for identifying
-bottlenecks. However, this is mostly a problem of workflows.
-
-How would you set up a file system that can be accessed from a large
-number of nodes?
-
-
- - How do I study or profile I/O patterns?
-
- - What can I do to optimize it?
-
+bottlenecks. However, this is mostly a workflow issue. The best way
+to 
 
 
 Local Disks and RAM Disks
