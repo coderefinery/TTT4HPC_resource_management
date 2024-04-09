@@ -122,13 +122,28 @@ chunks in memory.
 I/O Workflows
 -------------
 
+ - Even a norma- file system is generally much slower than a RAM, 
+   CPUs or GPUs. Computations have to wait for many cycles for each
+   I/O operation.
+
+ - Network file systems and shared file systems and have even more
+   latency. Performance also depends on what other users are doing.
+
+ - Bad I/O hampers interactive use. Waiting for a file to load can
+   be frustrating.
+
+ - How does a network file system work? What is Lustre? What happens
+   when I ask for the contents of a file?
+
+ - 
+ 
+
 A profiler can detect I/O patterns and this can be useful for identifying
 bottlenecks. However, this is mostly a problem of workflows.
 
 How would you set up a file system that can be accessed from a large
 number of nodes?
 
- - How does a network file system work? What is Lustre?
 
  - How do I study or profile I/O patterns?
 
