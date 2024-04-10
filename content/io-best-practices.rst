@@ -44,14 +44,16 @@ communication between nodes. But it's actually a bit worse than
 that. The file system needs to find metadata for the file first,
 to determine where to actually find the data.
 
-Reading a single large file sequentially is usually significantly
-faster.
 
- - The repository containing the demo examples is at
-   https://github.com/coderefinery/ttt4hpc-io-examples
+.. note::
+
+   The demo examples are at 
+   https://github.com/coderefinery/ttt4hpc-io-examples.
+   Expected results are included in collapsed sections titles 
+   "expected result".
 
 
-1. Setup
+1. **Setup**
 
 .. code-block:: bash
 
@@ -64,13 +66,19 @@ faster.
    python generate_data.py
    python create_archive.py
 
+.. admonition:: expected result
+   :class: dropdown
+
+   This should create a folder `data` with 7300 csv files and an
+   archive `data.tar` containing the same files.
+
 First, let's check the files we created. They are in the `data` 
 folder. Each csv file contains an activity measurement for each 
 hour of the day. There is data for 20 year, so 175200 rows all 
 together in 7300 files.
 
 
-2. Naive example reading all the files.
+2. **Naive example reading all the files**
 
 Here we read all of these files into memory and create a pandas
 dataframe. The approach in `read_files_naive.py` is the simplest
@@ -81,11 +89,36 @@ reads the files in the loop, and gives a more fair comparison.
 
    strace -c -e trace=file python read_files.py
 
+
+.. admonition:: expected result
+
+   This should show a large number of file reads. In this case, it
+   takes 4 seconds and opens files 8020 times.
+
+   .. code-block:: bash
+
+      Time taken: 4.3485071659088135 seconds
+      Mean: 2.4997423835125447
+      % time     seconds  usecs/call     calls    errors syscall
+      ------ ----------- ----------- --------- --------- ----------------
+       93.26    0.410789          51      8020        21 open
+        4.04    0.017788           8      2151       247 stat
+        2.64    0.011618          37       311           openat
+        0.05    0.000210          11        18           lstat
+        0.01    0.000035           3         9         9 access
+        0.01    0.000033           6         5         2 readlink
+        0.00    0.000008           4         2           getcwd
+        0.00    0.000000           0         1           execve
+      ------ ----------- ----------- --------- --------- ----------------
+      100.00    0.440481                 10517       279 total
+
+
+
 strace shows the number of file system calls. In this case we count
 file system operations.
 
 
-3. Example reading a single archive sequentially
+3. **Example reading a single archive sequentially**
 
 This example reads the same data from the tar archive. An
 uncompressed tar file is essentially just a concatenation of the
@@ -100,16 +133,74 @@ large number of file system calls.
    strace -c -e trace=file python read_archive.py
 
 
-4. Random access
+.. admonition:: expected result
+
+   This one should be faster and do fewer file reads. In my case it
+   takes 1.4 seconds and reads 580 files.
+
+   .. code-block:: bash
+
+      Time taken: 1.3761518001556396 seconds
+      Mean: 2.4997423835125447
+      % time     seconds  usecs/call     calls    errors syscall
+      ------ ----------- ----------- --------- --------- ----------------
+       51.01    0.021150          36       580        20 open
+       43.84    0.018177           8      2151       247 stat
+        4.81    0.001995          28        70           openat
+        0.29    0.000120           6        18           lstat
+        0.04    0.000015           1         9         9 access
+        0.01    0.000004           1         3           getcwd
+        0.01    0.000003           0         5         2 readlink
+        0.00    0.000000           0         1           execve
+      ------ ----------- ----------- --------- --------- ----------------
+      100.00    0.041464                  2837       278 total
+
+
+
+
+4. **Random access**
 
 Say we need to read the files in randomized order. This is common
 in training machine learning models. In this case reading from the
 the archive is not that helpful, since we cannot stream the
 contents.
 
+.. note::
+   
+   Tar is actually a bad format for this. A tar file is always
+   read sequentially. But independent of the file format, reading
+   files in random order is slow on a network file system.
+
+   Still, this is better than reading many small files.
+
+
 .. code-block:: python
 
    strace -c -e trace=file python read_archive_random.py
+
+.. admonition:: expected result
+
+   This should be slower than sequantial reading, but not create
+   as many file reads as reading the files individually. In my case,
+   it took 2.4 seconds and read 583 files.
+
+   .. code-block:: bash
+
+      Time taken: 2.365138530731201 seconds
+      Mean: 2.4997423835125447
+      % time     seconds  usecs/call     calls    errors syscall
+      ------ ----------- ----------- --------- --------- ----------------
+       52.85    0.023843          40       583        20 open
+       41.88    0.018894           8      2151       247 stat
+        4.92    0.002221          31        70           openat
+        0.25    0.000114           6        18           lstat
+        0.06    0.000027           3         9         9 access
+        0.02    0.000010           1         6           getcwd
+        0.01    0.000005           1         5         2 readlink
+        0.00    0.000000           0         1           execve
+      ------ ----------- ----------- --------- --------- ----------------
+      100.00    0.045114                  2843       278 total
+
 
 This is not great. How would you avoid reading the files out of 
 order?
@@ -121,6 +212,29 @@ chunks in memory.
 .. code-block:: python
 
    strace -c -e trace=file python read_random_chunked.py
+
+.. admonition:: expected result
+
+   This should be as fast as the sequential read and read only a few
+   files. In my case it was actually faster than the sequential
+   read.
+
+   .. code-block:: bash
+
+      Time taken: 0.9314842224121094 seconds
+      Mean: 2.4997423835125447
+      % time     seconds  usecs/call     calls    errors syscall
+      ------ ----------- ----------- --------- --------- ----------------
+       49.54    0.017817          30       580        20 open
+       45.62    0.016405           7      2151       247 stat
+        4.50    0.001619          23        70           openat
+        0.18    0.000065           3        18           lstat
+        0.08    0.000028           3         9         9 access
+        0.06    0.000022           4         5         2 readlink
+        0.02    0.000006           2         3           getcwd
+        0.01    0.000002           2         1           execve
+      ------ ----------- ----------- --------- --------- ----------------
+      100.00    0.035964                  2837       278 total
 
 
 
