@@ -43,7 +43,7 @@ levels, depending on your interest.
    :delim: ;
 
    50 min ; :doc:`laptop-to-cluster` Benchmarking & choosing job parameters
-   50 min ; :doc:`io-best-practices` I/O Best Practices
+   50 min ; :doc:`io-best-practices`
 
 
 
