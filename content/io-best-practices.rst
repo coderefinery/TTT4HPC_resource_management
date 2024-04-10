@@ -289,14 +289,25 @@ bottlenecks. However, this is mostly a workflow issue. Thinking through the work
 Local Disks and RAM Disks
 -------------------------
 
-- Demonstrate moving data to a local disk before running
+Local Disks
+***********
+
+- Some systems have local disks on nodes. These are connected directly
+   to the node and are much faster than network file systems.
+
+- Check your system documentation for the local disk path.
+
+- Local disks are usually not persistent. You need to copy data to
+  to the local disk at the beginning of a job and copy results back
+  at the end
 
 .. code-block:: bash
 
    unzip -d /tmp/data data.zip
+   
    python train_model.py --data /tmp/data
-
-- One IO operation on the shared system, then fast
+   
+   cp -r /tmp/results results
 
 
 - Try creating and reading a large file locally and on lustre
@@ -310,6 +321,19 @@ Local Disks and RAM Disks
    .. code-block:: bash
 
       time md5sum largefile
+
+
+Ramdisk
+*******
+
+- /dev/shm/ in linux
+
+- A file system directly in random access memory. This is very fast,
+  but limited by the available memory
+
+- Reserve enough memory when queueing the job
+
+
 
 
 Machine Learning and Large data
