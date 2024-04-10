@@ -91,6 +91,7 @@ reads the files in the loop, and gives a more fair comparison.
 
 
 .. admonition:: expected result
+   :class: dropdown
 
    This should show a large number of file reads. In this case, it
    takes 4 seconds and opens files 8020 times.
@@ -134,6 +135,7 @@ large number of file system calls.
 
 
 .. admonition:: expected result
+   :class: dropdown
 
    This one should be faster and do fewer file reads. In my case it
    takes 1.4 seconds and reads 580 files.
@@ -179,6 +181,7 @@ contents.
    strace -c -e trace=file python read_archive_random.py
 
 .. admonition:: expected result
+   :class: dropdown
 
    This should be slower than sequantial reading, but not create
    as many file reads as reading the files individually. In my case,
@@ -214,6 +217,7 @@ chunks in memory.
    strace -c -e trace=file python read_random_chunked.py
 
 .. admonition:: expected result
+   :class: dropdown
 
    This should be as fast as the sequential read and read only a few
    files. In my case it was actually faster than the sequential
