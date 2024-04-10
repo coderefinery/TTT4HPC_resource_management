@@ -142,14 +142,21 @@ I/O Workflows
 
 
 
-Common issues:
+**Common issues**:
 
  - Order of operations: Reading a file many times because the
    function is called in a loop.
- - Jenga: When reading the same data again and again in loop, for
-   machine learning for example. One epoch may not show the issue.
+
+This is often hidden by a function call, maybe even to a library. This can be about understanding what libraries do, and using them correctly.
+
+ - Accumulation: The problem does not show up in a small test case or a single epoch (single pass through all the data). But in a long run, inefficiencies accumulate to a bigger issue.
+
+Essentially, 10% of a big number is still pretty big. Since file systems are a shared resource and usually not reserved for a job, it's possible to congest the whole system.
+
  - Carrying everything with you: You never delete any input data.
-   Everything is kept in ram and takes space.
+
+Everything is kept in ram and takes space. The job might not need all the resources it seems to.
+
  - "She'll have the steak": Data format is chosen for manual 
    when the amount of data is small, or for inspection and plotting.
    The format is not optimal for the actual use case.
