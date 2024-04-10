@@ -230,11 +230,13 @@ locally for webdataset. The library can also handle http addresses
 directly, and has a protocol for general UNIX pipes.
 
 .. code-block:: python
+
    wds.WebDataset("filename.tar")
 
 is equivalent to
 
 .. code-block:: python
+
    wds.WebDataset("pipe:cat filename.tar")
 
 This makes webdataset very general and flexible. Unfortunately, 
