@@ -127,8 +127,14 @@ chunks in memory.
 I/O Workflows
 -------------
 
+Shared and Network File Systems
+*******************************
+
  - How does a network file system work? What is Lustre? What happens
    when I ask for the contents of a file?
+
+File System is Slow
+*******************
 
  - Even a normal file system is generally much slower than a RAM, 
    CPUs or GPUs. Computations have to wait for many cycles for each
@@ -142,7 +148,8 @@ I/O Workflows
 
 
 
-**Common issues**:
+Common Issues
+*************
 
  - Order of operations: Reading a file many times because the
    function is called in a loop.
@@ -157,13 +164,12 @@ Essentially, 10% of a big number is still pretty big. Since file systems are a s
 
 Everything is kept in ram and takes space. The job might not need all the resources it seems to.
 
- - "She'll have the steak": Data format is chosen for manual 
+ - Wrong Format: Data format is chosen
    when the amount of data is small, or for inspection and plotting.
    The format is not optimal for the actual use case.
 
 A profiler can detect I/O patterns and this can be useful for identifying
-bottlenecks. However, this is mostly a workflow issue. The best way
-to 
+bottlenecks. However, this is mostly a workflow issue. Thinking through the workflow steps and testing them in isolation is often the best approach.
 
 
 Local Disks and RAM Disks
