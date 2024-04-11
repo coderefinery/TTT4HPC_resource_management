@@ -1,4 +1,4 @@
-# Tuesdays tools and techniques for HPC
+# Tuesdays tools and techniques for HPC: Real-life compute cluster workflows
 
 Improve your cluster workflows!  You've had a basic course on working
 with a cluster - but what do people *actually* do? This course shows
@@ -31,8 +31,13 @@ levels, depending on your interest.
 :widths: auto
 :delim: ;
 
-50 min ; {doc}`laptop-to-cluster` Benchmarking & choosing job parameters
-50 min ; {doc}`io-best-practices`
+ 5 min; {doc}`introduction`
+10 min; {doc}`slurm-basics`
+15 min; {doc}`num-cores`
+15 min; {doc}`memory`
+ 5 min; Discussion
+15 min; Break
+50 min; {doc}`io-best-practices`
 :::
 
 :::{toctree}
@@ -40,6 +45,10 @@ levels, depending on your interest.
 :caption: Episodes
 :hidden:
 
+introduction
+slurm-basics
+num-cores
+memory
 io-best-practices
 exercises
 :::
