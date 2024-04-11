@@ -50,7 +50,6 @@ io-best-practices
 :maxdepth: 1
 :caption: Reference
 
-quick-reference
 io-best-practices
 
 exercises
