@@ -1,17 +1,17 @@
-Tuesdays tools and techniques for HPC
-======================================
+# Tuesdays tools and techniques for HPC
 
-.. warning::
+```{warning}
+This is under construction.  The schedule is not final, please see
+the planning HackMD (not linked here, check on CodeRefinery chat)
+for the current planning.
+```
 
-   This is under construction.  The schedule is not final, please see
-   the planning HackMD (not linked here, check on CodeRefinery chat)
-   for the current planning.
+```{admonition} Course instance in April 2024
 
-.. admonition:: Course instance in April 2024
-
-   You can follow the dates this course is given on the `course page
-   <https://scicomp.aalto.fi/training/scip/workflows-2023/>`__.
-   Dates are not yet known and registration is not yet open, though.
+You can follow the dates this course is given on the
+[course page](https://scicomp.aalto.fi/training/scip/workflows-2023/).
+Dates are not yet known and registration is not yet open, though.
+```
 
 Improve your cluster workflows!  You've had a basic course on working
 with a cluster - but what do people *actually* do? This course shows
@@ -25,49 +25,44 @@ designed to be "fireside chat with experts", a combination of demos,
 type-along, and independent exercises.  You can engage at different
 levels, depending on your interest.
 
-.. prereq::
+```{prereq}
+- Basic HPC usage course (if you don't have, many of the things we
+  talk about won't make sense, but you might pick up something
+  anyway).
+- A bit of experience using a HPC cluster (technically optional,
+  but will allow you to engage with the material at a deeper
+  level).
+- Access to some HPC computer cluster to do most exercises.
+  (Slurm-based, but most are these days).  (If you don't have, you
+  can't do all exercises - but still might learn something!)
+```
 
-   * Basic HPC usage course (if you don't have, many of the things we
-     talk about won't make sense, but you might pick up something
-     anyway).
-   * A bit of experience using a HPC cluster (technically optional,
-     but will allow you to engage with the material at a deeper
-     level).
-   * Access to some HPC computer cluster to do most exercises.
-     (Slurm-based, but most are these days).  (If you don't have, you
-     can't do all exercises - but still might learn something!)
+```{csv-table}
+:widths: auto
+:delim: ;
 
+50 min ; {doc}`laptop-to-cluster` Benchmarking & choosing job parameters
+50 min ; {doc}`io-best-practices`
+```
 
-.. csv-table::
-   :widths: auto
-   :delim: ;
+```{toctree}
+:maxdepth: 1
+:caption: The lesson
+```
 
-   50 min ; :doc:`laptop-to-cluster` Benchmarking & choosing job parameters
-   50 min ; :doc:`io-best-practices`
+```{toctree}
+:maxdepth: 1
+:caption: Reference
 
+quick-reference
+instructor-guide
+io-best-practices
 
-
-.. toctree::
-   :maxdepth: 1
-   :caption: The lesson
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Reference
-
-   quick-reference
-   instructor-guide
-   io-best-practices
-
-   exercises
-
+exercises
+```
 
 
-.. _learner-personas:
-
-Who is the course for?
-----------------------
+## Who is the course for?
 
 This course is for people using clusters or other larger computing
 resources.  It's not a basic course, but also not extremely advanced.
@@ -98,23 +93,7 @@ Some learner personas:
   passively watching some of the more basic demos.
 
 
-About the course
-----------------
 
-
-
-
-
-
-
-See also
---------
-
-
-
-
-
-Credits
--------
+## Credits
 
 This course is a collaboration between ~10 different instructors.
