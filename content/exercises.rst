@@ -25,13 +25,19 @@ improve the I/O performance of this code?
 Exercise 2.2
 ------------
 
-TODO: find CIFAR10 example or similar
-Download a ML training example. Count the number of file operations
-in a single epoch.
+Find an example machine learning training script in
+https://github.com/coderefinery/meteorological-data-processing-exercise.
+The data used is small enough to run on most systems, and the workflow
+is not especially problematic from I/O perspectice.
 
-Study the code and find where the file operations actually happen.
-Can you improve the workflow to reduce load on the disk. Does this
-improve performance?
+1. You are preparing to use the workflow for a significantly larger dataset.
+What should you take into account?
+
+2. Count the number of file operations in a single epoch.
+
+3. Study the code and find where the file operations actually happen.
+   Can you improve the workflow to reduce load on the disk. Does this
+   improve performance?
 
 
 Exercise 2.3
