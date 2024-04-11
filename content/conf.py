@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = "Real-life compute cluster workflows"
-copyright = "2022-, The contributors"
+copyright = "The contributors"
 author = "The contributors"
 github_user = "coderefinery"
 github_repo_name = ""  # auto-detected from dirname if blank
