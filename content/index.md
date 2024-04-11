@@ -1,11 +1,5 @@
 # Tuesdays tools and techniques for HPC
 
-:::{warning}
-This is under construction.  The schedule is not final, please see
-the planning HackMD (not linked here, check on CodeRefinery chat)
-for the current planning.
-:::
-
 :::{admonition} Course instance in April 2024
 
 You can follow the dates this course is given on the
@@ -74,7 +68,7 @@ later on.
 Some learner personas:
 
 - You've just taken a basic HPC course, and while you mostly
-  understand how the basic pices work, you are left wondering *"How
+  understand how the basic pieces work, you are left wondering *"How
   does this all fit together?  How do people combine all of these
   tools into an actual whole workflow?"*.
 
