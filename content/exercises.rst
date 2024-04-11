@@ -42,3 +42,23 @@ on an HPC system. Which is faster? When woudl the HPC system be
 slower than a desktop?
 
 
+Exercise 2.4: Meteorological data processing
+--------------------------------------------
+
+Find an example meteorological data processing pipeline at 
+https://github.com/coderefinery/meteorological-data-processing-exercise.
+
+1. Read the instructions in the readme and generate example data. 
+2. Research commonly used data types for this type of data.
+3. When does the process load data? How would you study possible I/O issues?
+4. Can you improve data handling in the code?
+
+
+Exercise X: Bring your own code and issues
+------------------------------------------
+
+Study I/O patterns in your own code. How much time does your code spend
+waiting for I/O? Is this a significant portion of the time? How can you
+improve this?
+
+
