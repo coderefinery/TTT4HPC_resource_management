@@ -10,7 +10,7 @@ function `simulate` runs on GPUs and is very fast. How would you
 improve the I/O performance of this code?
 
 .. code-block:: python
-    
+
     for parameter in parameters:
         for datafile in datafiles:
             with open(datafile) as f:
@@ -51,10 +51,10 @@ slower than a desktop?
 Exercise 2.4: Meteorological data processing
 --------------------------------------------
 
-Find an example meteorological data processing pipeline at 
+Find an example meteorological data processing pipeline at
 https://github.com/coderefinery/meteorological-data-processing-exercise.
 
-1. Read the instructions in the readme and generate example data. 
+1. Read the instructions in the readme and generate example data.
 2. Research commonly used data types for this type of data.
 3. When does the process load data? How would you study possible I/O issues?
 4. Can you improve data handling in the code?
