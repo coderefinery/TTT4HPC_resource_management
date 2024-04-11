@@ -48,6 +48,8 @@ levels, depending on your interest.
 :::{toctree}
 :maxdepth: 1
 :caption: The lesson
+
+io-best-practices
 :::
 
 :::{toctree}
