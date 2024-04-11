@@ -1,17 +1,17 @@
 # Tuesdays tools and techniques for HPC
 
-```{warning}
+:::{warning}
 This is under construction.  The schedule is not final, please see
 the planning HackMD (not linked here, check on CodeRefinery chat)
 for the current planning.
-```
+:::
 
-```{admonition} Course instance in April 2024
+:::{admonition} Course instance in April 2024
 
 You can follow the dates this course is given on the
 [course page](https://scicomp.aalto.fi/training/scip/workflows-2023/).
 Dates are not yet known and registration is not yet open, though.
-```
+:::
 
 Improve your cluster workflows!  You've had a basic course on working
 with a cluster - but what do people *actually* do? This course shows
@@ -25,7 +25,7 @@ designed to be "fireside chat with experts", a combination of demos,
 type-along, and independent exercises.  You can engage at different
 levels, depending on your interest.
 
-```{prereq}
+:::{prereq}
 - Basic HPC usage course (if you don't have, many of the things we
   talk about won't make sense, but you might pick up something
   anyway).
@@ -35,22 +35,22 @@ levels, depending on your interest.
 - Access to some HPC computer cluster to do most exercises.
   (Slurm-based, but most are these days).  (If you don't have, you
   can't do all exercises - but still might learn something!)
-```
+:::
 
-```{csv-table}
+:::{csv-table}
 :widths: auto
 :delim: ;
 
 50 min ; {doc}`laptop-to-cluster` Benchmarking & choosing job parameters
 50 min ; {doc}`io-best-practices`
-```
+:::
 
-```{toctree}
+:::{toctree}
 :maxdepth: 1
 :caption: The lesson
-```
+:::
 
-```{toctree}
+:::{toctree}
 :maxdepth: 1
 :caption: Reference
 
@@ -59,7 +59,7 @@ instructor-guide
 io-best-practices
 
 exercises
-```
+:::
 
 
 ## Who is the course for?
