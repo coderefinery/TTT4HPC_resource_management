@@ -44,6 +44,14 @@ io-best-practices
 exercises
 :::
 
+:::{toctree}
+:maxdepth: 1
+:caption: For helpers
+:hidden:
+
+testing
+:::
+
 
 ## Who is the course for?
 
