@@ -25,7 +25,7 @@ improve the I/O performance of this code?
 Exercise 2.2
 ------------
 
-TODO: find MNIST example or similar
+TODO: find CIFAR10 example or similar
 Download a ML training example. Count the number of file operations
 in a single epoch.
 
@@ -38,7 +38,7 @@ Exercise 2.3
 ------------
 
 Use dd to generate a large file. Try this on you local machine and
-on an HPC system. Which is faster? When woudl the HPC system be
+on an HPC system. Which is faster? When would the HPC system be
 slower than a desktop?
 
 
