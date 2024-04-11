@@ -1,12 +1,5 @@
 # Tuesdays tools and techniques for HPC
 
-:::{admonition} Course instance in April 2024
-
-You can follow the dates this course is given on the
-[course page](https://scicomp.aalto.fi/training/scip/workflows-2023/).
-Dates are not yet known and registration is not yet open, though.
-:::
-
 Improve your cluster workflows!  You've had a basic course on working
 with a cluster - but what do people *actually* do? This course shows
 practical examples and tips which may help you, but aren't usually
@@ -31,6 +24,9 @@ levels, depending on your interest.
   can't do all exercises - but still might learn something!)
 :::
 
+
+## Episodes and timing
+
 :::{csv-table}
 :widths: auto
 :delim: ;
@@ -41,17 +37,10 @@ levels, depending on your interest.
 
 :::{toctree}
 :maxdepth: 1
-:caption: The lesson
+:caption: Episodes
+:hidden:
 
 io-best-practices
-:::
-
-:::{toctree}
-:maxdepth: 1
-:caption: Reference
-
-io-best-practices
-
 exercises
 :::
 
@@ -85,7 +74,6 @@ Some learner personas:
 
   You'll probably attend and do the more advanced exercises, while
   passively watching some of the more basic demos.
-
 
 
 ## Credits
