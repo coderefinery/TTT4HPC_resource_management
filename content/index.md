@@ -57,7 +57,6 @@ io-best-practices
 :caption: Reference
 
 quick-reference
-instructor-guide
 io-best-practices
 
 exercises
