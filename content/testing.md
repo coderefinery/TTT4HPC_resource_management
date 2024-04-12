@@ -17,6 +17,14 @@ $ mpicc example.c -o example
 ```
 
 
+## It is possible to run a Python script
+
+We will not use dependencies but this should be possible:
+```bash
+$ python example.py
+```
+
+
 ## sacct is available
 
 ```console
