@@ -11,18 +11,16 @@ We will submit Slurm jobs as example.
 
 ## We can compile a C code with MPI
 
-Something like `mpicc example.c -o example` should work.
-
-
-## We can compile a Fortran code
-
-Something like `gfortran example.f90 -o example` should work.
+Something like this should work:
+```bash
+$ mpicc example.c -o example
+```
 
 
 ## sacct is available
 
 ```console
-sacct -j 10404698 --format=MaxRSS
+$ sacct -j 10404698 --format=MaxRSS
 
     MaxRSS
 ----------
