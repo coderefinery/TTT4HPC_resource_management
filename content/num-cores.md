@@ -137,7 +137,7 @@ emphasize-lines: 7-8
 module purge
 module load foss/2022b
 
-time srun ./planets --count=30000 --steps=100 --network-penalty=200
+srun ./planets --count=30000 --steps=100 --network-penalty=200
 ```
 
 You need to adapt:
