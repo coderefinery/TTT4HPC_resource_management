@@ -1,6 +1,30 @@
 # Exercises
 
 
+## Exercise 1.1
+
+Try to reproduce the results from {ref}`num-cores` using the example code on
+your cluster.
+
+
+## Exercise 1.2
+
+Apply the methodology from {ref}`num-cores` to your own code
+to find the optimal number of cores to use.
+
+
+## Exercise 1.3
+
+Try to reproduce the results from {ref}`memory` using the example code on
+your cluster.
+
+
+## Exercise 1.4
+
+Apply the methodology from {ref}`memory` to your own code
+to find how much memory it uses.
+
+
 ## Exercise 2.1
 
 This code runs a parameter search with a fast simulation step. The
