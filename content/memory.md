@@ -176,11 +176,12 @@ Then rerun the job and compare the result from `/usr/bin/time -v` and
 - `sacct` might give **zero** as result
 
 The reason for the zero result is the sampling rate of `sacct`. Now increase
-the seconds paramter to `--seconds=40` and compare the two again.
+the seconds parameter to `--seconds=40` and compare the two again.
 
-:::{admonition} Conclusion
-- `/usr/bin/time -v` is more accurate and gives you the high-water mark
-- `sacct` is good for a rough estimate but is sampled typically every 30 seconds and might miss the peak
+:::{admonition} Conclusions
+- `/usr/bin/time -v` is more accurate and gives you the high-water mark.
+- `sacct` is good for a rough estimate but is sampled typically every 30 seconds and might miss the peak.
+- Once you know the high-water mark, add 15-20% extra memory for the job.
 :::
 
 
