@@ -187,7 +187,7 @@ the seconds parameter to `--seconds=40` and compare the two again.
 
 ## Sometimes the answer is not more memory but to rewrite the code
 
-:::note
+:::{note}
 This section might only make sense if you use Python. Skip it
 otherwise.
 :::
