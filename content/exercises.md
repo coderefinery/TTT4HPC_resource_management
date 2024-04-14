@@ -1,32 +1,29 @@
-Exercises
-=========
+# Exercises
 
 
-Exercise 2.1
-------------
+## Exercise 2.1
 
 This code runs a parameter search with a fast simulation step. The
 function `simulate` runs on GPUs and is very fast. How would you
 improve the I/O performance of this code?
 
-.. code-block:: python
+```python
+for parameter in parameters:
+    for datafile in datafiles:
+        with open(datafile) as f:
+            data = f.read()
 
-    for parameter in parameters:
-        for datafile in datafiles:
-            with open(datafile) as f:
-                data = f.read()
+        result = simulate(data, parameter)
 
-            result = simulate(data, parameter)
-
-            with open('results.json', 'a') as f:
-                f.write(json.dumps(result))
+        with open('results.json', 'a') as f:
+            f.write(json.dumps(result))
+```
 
 
-Exercise 2.2
-------------
+## Exercise 2.2
 
 Find an example machine learning training script in
-https://github.com/coderefinery/meteorological-data-processing-exercise.
+<https://github.com/coderefinery/meteorological-data-processing-exercise>.
 The data used is small enough to run on most systems, and the workflow
 is not especially problematic from I/O perspectice.
 
@@ -40,19 +37,17 @@ What should you take into account?
    improve performance?
 
 
-Exercise 2.3
-------------
+## Exercise 2.3
 
 Use dd to generate a large file. Try this on you local machine and
 on an HPC system. Which is faster? When would the HPC system be
 slower than a desktop?
 
 
-Exercise 2.4: Meteorological data processing
---------------------------------------------
+## Exercise 2.4: Meteorological data processing
 
 Find an example meteorological data processing pipeline at
-https://github.com/coderefinery/meteorological-data-processing-exercise.
+<https://github.com/coderefinery/meteorological-data-processing-exercise>.
 
 1. Read the instructions in the readme and generate example data.
 2. Research commonly used data types for this type of data.
@@ -60,11 +55,8 @@ https://github.com/coderefinery/meteorological-data-processing-exercise.
 4. Can you improve data handling in the code?
 
 
-Exercise X: Bring your own code and issues
-------------------------------------------
+## Exercise X: Bring your own code and issues
 
 Study I/O patterns in your own code. How much time does your code spend
 waiting for I/O? Is this a significant portion of the time? How can you
 improve this?
-
-
