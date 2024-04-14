@@ -68,7 +68,7 @@ to determine when a job will start and how long it will take to finish:
 :width: 80%
 
 Example for backfilling: Imagine the pink job just started but suddenly
-crashes? What will the scheduler try to do?
+crashes. What will the scheduler try to do?
 :::
 
 
