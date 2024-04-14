@@ -22,7 +22,7 @@ A too generous "better safe than sorry" approach to memory allocation leads to t
 
 It is important to make sure that your jobs use the right amount of memory
 (below we show how to find out) and {ref}`the right number of CPUs
-<choosing-number-of-cores>` in order to help you and others using the HPC
+<num-cores>` in order to help you and others using the HPC
 machines utilize these resources more efficiently, and in turn get work done
 more speedily.
 
