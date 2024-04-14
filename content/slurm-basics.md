@@ -1,3 +1,0 @@
-# Slurm basics
-
-Work in progress ...

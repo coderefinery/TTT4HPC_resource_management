@@ -31,8 +31,7 @@ levels, depending on your interest.
 :widths: auto
 :delim: ;
 
- 5 min; {doc}`introduction`
-10 min; {doc}`slurm-basics`
+15 min; {doc}`scheduling`
 15 min; {doc}`num-cores`
 15 min; {doc}`memory`
  5 min; Discussion
@@ -45,8 +44,7 @@ levels, depending on your interest.
 :caption: Episodes
 :hidden:
 
-introduction
-slurm-basics
+scheduling
 num-cores
 memory
 io-best-practices
