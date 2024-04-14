@@ -196,6 +196,7 @@ cubes). But when you look at the resource use of a job, it might be uneven:
 :width: 80%
 
 Example for a job where the resource use (violet color) is uneven over time.
+Gray color represents the resources which we requested from the scheduler.
 :::
 
 :::{discussion}
