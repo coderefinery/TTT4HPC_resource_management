@@ -33,6 +33,28 @@ We recommend you follow the demonstration and
 - networked filesystems tend to be best at large files, bad at many small
 
 
+Quick primer: How files are accessed
+------------------------------------
+
+.. figure:: img/file_explanation.svg
+
+Files on file systems consist of:
+
+  - metadata (who owns the file, when was the file last modified,
+    how big is the file)
+  - the file contents (actual contents of the data)
+
+Programs check the metadata with ``stat``-calls. File contents are accessed
+by creating a file descriptor with with an ``open``-call and then file
+contents are either read using a ``read``-call or written using a
+``write``-call.
+
+For example, ``ls -l`` will check the metadata of a file while
+``cat`` will open the file contents.
+
+.. figure:: img/file_access.svg
+
+
 Data Format Demos
 -----------------
 
@@ -43,7 +65,6 @@ stored on many disks and reading one usually requires some
 communication between nodes. But it's actually a bit worse than
 that. The file system needs to find metadata for the file first,
 to determine where to actually find the data.
-
 
 .. note::
 
