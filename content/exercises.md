@@ -1,5 +1,32 @@
 # Exercises
 
+```{admonition} Virtual environments
+  It's a good idea to run the exercises in a virtual environment. This way
+  you avoid conflicts between the dependencies for difference exercises and
+  your project.
+  
+  `````{tabs}
+    ````{group-tab} Triton
+      ``` bash
+          module load miniconda
+          conda create -n ENV_NAME python pip
+          source activate ENV_NAME
+          pip install requirements
+      ```
+    ````
+    ````{group-tab} Saga, Fram & Betzy
+      ```bash
+          module load Miniconda3
+          conda create -n ENV_NAME python pip
+          source activate ENV_NAME
+          pip install -r requirements
+      ```
+    ````
+  ``````
+```
+
+
+
 
 ## Exercise 1.1
 
