@@ -108,31 +108,35 @@ reads the files in the loop, and gives a more fair comparison.
 
 .. code-block:: python
 
-   strace -c -e trace=file python read_files.py
+   strace -c -e trace=%desc python read_files.py
 
 
 .. admonition:: expected result
    :class: dropdown
 
    This should show a large number of file reads. In this case, it
-   takes 4 seconds and opens files 8020 times.
+   takes 3.6 seconds and opens 8028 files.
 
    .. code-block:: bash
 
-      Time taken: 4.3485071659088135 seconds
-      Mean: 2.4997423835125447
+      Time taken: 3.6240997314453125 seconds
+      Mean: 2.4964045698924733
       % time     seconds  usecs/call     calls    errors syscall
       ------ ----------- ----------- --------- --------- ----------------
-       93.26    0.410789          51      8020        21 open
-        4.04    0.017788           8      2151       247 stat
-        2.64    0.011618          37       311           openat
-        0.05    0.000210          11        18           lstat
-        0.01    0.000035           3         9         9 access
-        0.01    0.000033           6         5         2 readlink
-        0.00    0.000008           4         2           getcwd
-        0.00    0.000000           0         1           execve
+       31.83    0.441350          54      8028        23 open
+       20.72    0.287255          18     15907           read
+       18.65    0.258579          31      8318           close
+       18.09    0.250797          15     15907           fstat
+        4.88    0.067700           4     15806         3 lseek
+        2.35    0.032638           4      7903      7896 ioctl
+        1.66    0.022961          45       505           mmap
+        1.22    0.016958          54       312           openat
+        0.59    0.008121          13       624           getdents
+        0.00    0.000018           9         2           write
+        0.00    0.000003           0         4           fcntl
+        0.00    0.000000           0         1           epoll_create1
       ------ ----------- ----------- --------- --------- ----------------
-      100.00    0.440481                 10517       279 total
+      100.00    1.386380                 73317      7922 total
 
 
 
@@ -152,33 +156,35 @@ large number of file system calls.
 
 .. code-block:: python
 
-   strace -c -e trace=file python read_archive.py
+   strace -c -e trace=%desc python read_archive.py
 
 
 .. admonition:: expected result
    :class: dropdown
 
    This one should be faster and do fewer file reads. In my case it
-   takes 1.4 seconds and reads 580 files.
+   takes 1.1 seconds and opens 588 files.
 
    .. code-block:: bash
 
-      Time taken: 1.3761518001556396 seconds
-      Mean: 2.4997423835125447
+      Time taken: 1.0703248977661133 seconds
+      Mean: 2.4964045698924733
       % time     seconds  usecs/call     calls    errors syscall
       ------ ----------- ----------- --------- --------- ----------------
-       51.01    0.021150          36       580        20 open
-       43.84    0.018177           8      2151       247 stat
-        4.81    0.001995          28        70           openat
-        0.29    0.000120           6        18           lstat
-        0.04    0.000015           1         9         9 access
-        0.01    0.000004           1         3           getcwd
-        0.01    0.000003           0         5         2 readlink
-        0.00    0.000000           0         1           execve
+       27.39    0.075740         128       588        22 open
+       20.90    0.057777          22      2516           read
+       15.91    0.043988          42      1027           fstat
+       15.58    0.043066          67       638           close
+        8.59    0.023747          25       926         3 lseek
+        4.80    0.013264          25       511           mmap
+        4.45    0.012307          26       463       456 ioctl
+        1.48    0.004104          57        71           openat
+        0.90    0.002500          17       142           getdents
+        0.00    0.000007           3         2           write
+        0.00    0.000005           1         4           fcntl
+        0.00    0.000000           0         1           epoll_create1
       ------ ----------- ----------- --------- --------- ----------------
-      100.00    0.041464                  2837       278 total
-
-
+      100.00    0.276505                  6889       481 total
 
 
 4. **Random access**
@@ -189,7 +195,8 @@ the archive is not that helpful, since we cannot stream the
 contents.
 
 .. note::
-   
+
+
    Tar is actually a bad format for this. A tar file is always
    read sequentially. But independent of the file format, reading
    files in random order is slow on a network file system.
@@ -199,31 +206,36 @@ contents.
 
 .. code-block:: python
 
-   strace -c -e trace=file python read_archive_random.py
+   strace -c -e trace=%desc python read_archive_random.py
 
 .. admonition:: expected result
    :class: dropdown
 
    This should be slower than sequantial reading, but not create
    as many file reads as reading the files individually. In my case,
-   it took 2.4 seconds and read 583 files.
+   it took 3.2 seconds and opened 591 files.
 
    .. code-block:: bash
 
-      Time taken: 2.365138530731201 seconds
-      Mean: 2.4997423835125447
+      Time taken: 3.1685996055603027 seconds
+      Mean: 2.4964045698924733
       % time     seconds  usecs/call     calls    errors syscall
       ------ ----------- ----------- --------- --------- ----------------
-       52.85    0.023843          40       583        20 open
-       41.88    0.018894           8      2151       247 stat
-        4.92    0.002221          31        70           openat
-        0.25    0.000114           6        18           lstat
-        0.06    0.000027           3         9         9 access
-        0.02    0.000010           1         6           getcwd
-        0.01    0.000005           1         5         2 readlink
-        0.00    0.000000           0         1           execve
+       24.14    0.091852         155       591        22 open
+       21.52    0.081871          78      1038           read
+       14.97    0.056972          55      1031           fstat
+       13.78    0.052431          81       641           close
+       13.64    0.051899           1     30693         3 lseek
+        5.23    0.019895          38       511           mmap
+        3.89    0.014816          31       467       460 ioctl
+        1.86    0.007093          99        71           openat
+        0.96    0.003658          25       142           getdents
+        0.00    0.000018           9         2           write
+        0.00    0.000005           1         4           fcntl
+        0.00    0.000003           3         1           epoll_create1
       ------ ----------- ----------- --------- --------- ----------------
-      100.00    0.045114                  2843       278 total
+      100.00    0.380513                 35192       485 total
+
 
 
 This is not great. How would you avoid reading the files out of 
@@ -235,31 +247,34 @@ chunks in memory.
 
 .. code-block:: python
 
-   strace -c -e trace=file python read_random_chunked.py
+   strace -c -e trace=%desc python read_random_chunked.py
 
 .. admonition:: expected result
    :class: dropdown
 
    This should be as fast as the sequential read and read only a few
-   files. In my case it was actually faster than the sequential
-   read.
+   files.
 
    .. code-block:: bash
 
-      Time taken: 0.9314842224121094 seconds
-      Mean: 2.4997423835125447
+      Time taken: 1.112762212753296 seconds
+      Mean: 2.4964045698924733
       % time     seconds  usecs/call     calls    errors syscall
       ------ ----------- ----------- --------- --------- ----------------
-       49.54    0.017817          30       580        20 open
-       45.62    0.016405           7      2151       247 stat
-        4.50    0.001619          23        70           openat
-        0.18    0.000065           3        18           lstat
-        0.08    0.000028           3         9         9 access
-        0.06    0.000022           4         5         2 readlink
-        0.02    0.000006           2         3           getcwd
-        0.01    0.000002           2         1           execve
+       29.36    0.109168         185       588        22 open
+       19.42    0.072187          28      2518           read
+       16.78    0.062369          97       638           close
+       14.71    0.054685          53      1027           fstat
+        7.06    0.026230          28       926         3 lseek
+        5.35    0.019879          38       512           mmap
+        3.32    0.012342          26       463       456 ioctl
+        2.51    0.009336         131        71           openat
+        1.49    0.005554          39       142           getdents
+        0.00    0.000011           2         4           fcntl
+        0.00    0.000007           7         1           epoll_create1
+        0.00    0.000000           0         2           write
       ------ ----------- ----------- --------- --------- ----------------
-      100.00    0.035964                  2837       278 total
+      100.00    0.371768                  6892       481 total
 
 
 .. note::
