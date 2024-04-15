@@ -81,7 +81,7 @@ to determine where to actually find the data.
    # Clone the repository and setup
    git clone https://github.com/coderefinery/ttt4hpc-io-examples
    cd ttt4hpc-io-examples
-   pip install -r requirements
+   pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
 
    cd data_formats
    python generate_data.py
