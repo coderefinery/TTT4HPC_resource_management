@@ -7,6 +7,8 @@
 
   `````{tabs}
     ````{group-tab} Triton
+      We recommend using conda on Triton. Note that you need to run
+      `source activate` and not `conda activate`.
       ``` bash
           module load miniconda
           conda create -n ENV_NAME python pip
@@ -15,11 +17,24 @@
       ```
     ````
     ````{group-tab} Saga, Fram & Betzy
+      We recommend using conda on Triton. Note that you need to run
+      `source activate` and not `conda activate`.
       ```bash
           module load Miniconda3
           conda create -n ENV_NAME python pip
           source activate ENV_NAME
           pip install -r requirements
+      ```
+    ````
+    ````{group-tab} CSC Clusters
+      On CSC clusters, you can use `pip-containerize` to create a container
+      for the virtual environment.
+      ```bash
+          module purge
+          module load tykky
+          mkdir MyEnv
+          pip-containerize new --prefix MyEnv requirements.txt
+          export PATH="$PWD/MyEnv/bin:$PATH"
       ```
     ````
   `````
