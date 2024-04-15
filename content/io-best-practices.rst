@@ -248,7 +248,8 @@ chunks in memory.
    examples we found:
 
    - https://github.com/cniethammer/strace-analyzer/:
-     Written in Rust, so you need to install Rust first.
+     Written in `Rust <https://www.rust-lang.org>`_, so you
+     need to `install Rust <https://www.rust-lang.org/tools/install>`_ first.
 
    - https://github.com/wookietreiber/strace-analyzer:
      Written in Python, but not as a package. Clone the repository to run
