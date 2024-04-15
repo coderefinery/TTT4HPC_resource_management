@@ -11,7 +11,7 @@ I/O Best Practices
 .. prerequisites::
 
    * No prerequisites for following the demo
-   
+
    You can find the demo code and setup instructions at
    https://github.com/coderefinery/ttt4hpc-io-examples.
 
@@ -27,7 +27,7 @@ the reads and writes to move convenient times or using the right
 storage system.
 
 This lesson is mostly a demonstration, with some general discussion.
-We recommend you follow the demonstration and 
+We recommend you follow the demonstration and
 
 - Filesystem can be the slowest part of many jobs
 - networked filesystems tend to be best at large files, bad at many small
@@ -72,9 +72,9 @@ to determine where to actually find the data.
 
 .. note::
 
-   The demo examples are at 
+   The demo examples are at
    https://github.com/coderefinery/ttt4hpc-io-examples.
-   Expected results are included in collapsed sections titles 
+   Expected results are included in collapsed sections titles
    "expected result".
 
 
@@ -97,9 +97,9 @@ to determine where to actually find the data.
    This should create a folder `data` with 7300 csv files and an
    archive `data.tar` containing the same files.
 
-First, let's check the files we created. They are in the `data` 
-folder. Each csv file contains an activity measurement for each 
-hour of the day. There is data for 20 year, so 175200 rows all 
+First, let's check the files we created. They are in the `data`
+folder. Each csv file contains an activity measurement for each
+hour of the day. There is data for 20 year, so 175200 rows all
 together in 7300 files.
 
 
@@ -242,10 +242,10 @@ contents.
 
 
 
-This is not great. How would you avoid reading the files out of 
+This is not great. How would you avoid reading the files out of
 order?
 
-In this case, the whole data fits in memory. Even if it didn't, 
+In this case, the whole data fits in memory. Even if it didn't,
 it's usually good enough to read the file in chunks and shuffle the
 chunks in memory.
 
@@ -419,9 +419,9 @@ Local Disks
 .. code-block:: bash
 
    unzip -d /tmp/data data.zip
-   
+
    python train_model.py --data /tmp/data
-   
+
    cp -r /tmp/results results
 
 
@@ -511,7 +511,7 @@ is equivalent to
 
    wds.WebDataset("pipe:cat filename.tar")
 
-This makes webdataset very general and flexible. Unfortunately, 
+This makes webdataset very general and flexible. Unfortunately,
 though, the data needs to be stored in a tar file.
 
 
