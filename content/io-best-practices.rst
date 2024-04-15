@@ -83,7 +83,7 @@ to determine where to actually find the data.
    cd ttt4hpc-io-examples
    pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
 
-   cd data_formats
+   cd data_formats_1
    python generate_data.py
    python create_archive.py
 
