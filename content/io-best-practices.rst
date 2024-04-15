@@ -241,6 +241,19 @@ chunks in memory.
       100.00    0.035964                  2837       278 total
 
 
+.. note::
+
+   The strace output is not very readable. There are not many tools for
+   parsing it into something more human readable. Here are a couple of
+   examples we found:
+
+   - https://github.com/cniethammer/strace-analyzer/:
+     Written in Rust, so you need to install Rust first.
+
+   - https://github.com/wookietreiber/strace-analyzer:
+     Written in Python, but not as a package. Clone the repository to run
+     the scripts.
+
 
 I/O Workflows
 -------------
@@ -272,22 +285,23 @@ Common Issues
  - Order of operations: Reading a file many times because the
    function is called in a loop.
 
-This is often hidden by a function call, maybe even to a library. This can be about understanding what libraries do, and using them correctly.
+   This is often hidden by a function call, maybe even to a library. This can be about understanding what libraries do, and using them correctly.
 
  - Accumulation: The problem does not show up in a small test case or a single epoch (single pass through all the data). But in a long run, inefficiencies accumulate to a bigger issue.
 
-Essentially, 10% of a big number is still pretty big. Since file systems are a shared resource and usually not reserved for a job, it's possible to congest the whole system.
+   Essentially, 10% of a big number is still pretty big. Since file systems are a shared resource and usually not reserved for a job, it's possible to congest the whole system.
 
  - Carrying everything with you: You never delete any input data.
 
-Everything is kept in ram and takes space. The job might not need all the resources it seems to.
+   Everything is kept in ram and takes space. The job might not need all the resources it seems to.
 
  - Wrong Format: Data format is chosen
    when the amount of data is small, or for inspection and plotting.
    The format is not optimal for the actual use case.
 
-A profiler can detect I/O patterns and this can be useful for identifying
-bottlenecks. However, this is mostly a workflow issue. Thinking through the workflow steps and testing them in isolation is often the best approach.
+   A profiler can detect I/O patterns and this can be useful for identifying
+   bottlenecks. However, this is mostly a workflow issue. Thinking through the
+   workflow steps and testing them in isolation is often the best approach.
 
 
 Local Disks and RAM Disks
