@@ -38,6 +38,8 @@ Quick primer: How files are accessed
 
 .. figure:: img/file_explanation.svg
 
+   Figure 1: File structure
+
 Files on file systems consist of:
 
   - metadata (who owns the file, when was the file last modified,
@@ -53,6 +55,8 @@ For example, ``ls -l`` will check the metadata of a file while
 ``cat`` will open the file contents.
 
 .. figure:: img/file_access.svg
+
+   Figure 2: Different programs might access files in different ways
 
 
 Data Format Demos
@@ -301,12 +305,64 @@ Shared and Network File Systems
  - How does a network file system work? What is Lustre? What happens
    when I ask for the contents of a file?
 
+.. admonition:: Explanation of shared network filesystems
+   :class: dropdown
+
+   In high-performance clusters the file system is actually multiple
+   metadata and object storage servers. This makes it possible to
+   to store huge amounts of data with minimal risk of data loss in
+   a case of a hardware failure and to provide access to the data
+   with good throughput.
+
+   .. figure:: img/lustre_explanation.svg
+
+      Figure 3: Structure of a Lustre filesystem.
+
+   Typical file access requires the filesystem client to ask the
+   metadata servers where the file's data is stored and whether
+   the user has sufficient rights to access the file.
+
+   After this call is finished the file system client can contact
+   the object storage server for the file contents. In both calls
+   the server in question has to load the relevant
+   metadata or data from disks that contain the data.
+
+   These file systems are usually connected to compute nodes with a
+   high speed interconnect, but each filesystem call will have some
+   latency involved with it.
+
+   Minimizing the number of file system calls and making sure that
+   the program reads data in large chunks is the optimal way of
+   accessing files in these systems.
+
+
 File System is Slow
 *******************
 
- - Even a normal file system is generally much slower than a RAM, 
+ - Even a normal file system is generally much slower than a RAM,
    CPUs or GPUs. Computations have to wait for many cycles for each
    I/O operation.
+
+   .. admonition:: Typical transfer speeds
+      :class: dropdown
+
+      `Interface bit rates <https://en.wikipedia.org/wiki/List_of_interface_bit_rates>`_
+      for different interfaces:
+
+      .. list-table::
+
+         * - **Interface**
+           - **Approximate bandwidth**
+         * - Hard drive
+           - 0.6 GB/s
+         * - NVMe SSD
+           - 4-16 GB/s
+         * - High-speed interconnect
+           - 10-25 GB/s
+         * - RAM memory
+           - 10-50 GB/s
+         * - GPU VRAM memory
+           - 80-3500 GB/s
 
  - Network file systems and shared file systems and have even more
    latency. Performance also depends on what other users are doing.
@@ -324,13 +380,13 @@ Common Issues
 
    This is often hidden by a function call, maybe even to a library. This can be about understanding what libraries do, and using them correctly.
 
- - Accumulation: The problem does not show up in a small test case or a single epoch (single pass through all the data). But in a long run, inefficiencies accumulate to a bigger issue.
+ - Accumulation: A bad IO pattern might not seem bad when simulation is run with a single computer or deep learning model is trained for one epoch (single pass through all the data). But in a larger scale or with a longer run, inefficiencies and bad access patterns accumulate.
 
    Essentially, 10% of a big number is still pretty big. Since file systems are a shared resource and usually not reserved for a job, it's possible to congest the whole system.
 
- - Carrying everything with you: You never delete any input data.
+ - Carrying everything with you: All of the data is loaded, when only part of it is needed.
 
-   Everything is kept in ram and takes space. The job might not need all the resources it seems to.
+   Everything is kept in RAM and takes space. The job might not need all the resources it seems to need.
 
  - Wrong Format: Data format is chosen
    when the amount of data is small, or for inspection and plotting.
@@ -340,6 +396,10 @@ Common Issues
    bottlenecks. However, this is mostly a workflow issue. Thinking through the
    workflow steps and testing them in isolation is often the best approach.
 
+   Human readable data formats (CSVs, .txt, .json) are good when human is reading the
+   file contents with an editor. If they are processed by code using binary formats can
+   improve code's efficiency.
+
 
 Local Disks and RAM Disks
 -------------------------
@@ -348,7 +408,7 @@ Local Disks
 ***********
 
 - Some systems have local disks on nodes. These are connected directly
-   to the node and are much faster than network file systems.
+  to the node and are much faster than network file systems.
 
 - Check your system documentation for the local disk path.
 
@@ -399,11 +459,24 @@ Storing and accessing the data can easily become a bottleneck. It's
 easy to starve the GPUs for data just because accessing the input
 files on disk is too slow.
 
-Different frameworks have their own formats, but they work in
-similar ways. They allow storing large datasets in shards, each
-containing several gigabytes of data. Sharding allows splitting the
-data accross disks and reading with multiple threads. Data can also
-be randomized within a batch or a shard.
+This is usually further complicated by the fact that in each
+training epoch all of the data needs to be loaded in random
+order. To deal around this problem different frameworks have created
+their own data formats, but they work in similar ways.
+
+Typically large datasets are split into shards, where each shard
+contains some random piece of the full dataset. Shards can be up to
+multiple gigabytes in size.
+
+When data is read during training multiple threads are usually used
+to read the shards. Each thread loads data from random shard in
+sequential order and shuffles the data in memory. Data is then
+collected to master thread that creates a batch of data from inputs
+of all data loaders.
+
+.. figure:: img/sharded_dataloading.svg
+
+   Figure 4: An example of a sharded data loading pipeline
 
 Webdataset does this for PyTorch. It uses the POSIX tar format,
 making it easy to handle on most HPC systems.
