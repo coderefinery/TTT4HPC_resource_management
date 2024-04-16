@@ -49,7 +49,7 @@ Try to reproduce the results from {ref}`num-cores` using the example code on
 your cluster.
 
 
-## Exercise 1.2
+## Exercise 1.2 (optional)
 
 Apply the methodology from {ref}`num-cores` to your own code
 to find the optimal number of cores to use.
@@ -61,7 +61,7 @@ Try to reproduce the results from {ref}`memory` using the example code on
 your cluster.
 
 
-## Exercise 1.4
+## Exercise 1.4 (optional)
 
 Apply the methodology from {ref}`memory` to your own code
 to find how much memory it uses.
