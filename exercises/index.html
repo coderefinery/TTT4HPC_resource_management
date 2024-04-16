@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercises &mdash; Real-life compute cluster workflows  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_lesson.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/term_role_formatting.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_rtd_theme_ext_color_contrast.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+
+  
+    <link rel="shortcut icon" href="../_static/coderefinery.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script src="../_static/tabs.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="How to test this lesson" href="../testing/" />
+    <link rel="prev" title="I/O Best Practices" href="../io-best-practices/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../" class="icon icon-home">
+            Real-life compute cluster workflows
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Episodes</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../scheduling/">Job scheduling and Slurm basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../num-cores/">How to choose the number of cores by timing a series of runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory/">Measuring and choosing the right amount of memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io-best-practices/">I/O Best Practices</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Exercises</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-1-1">Exercise 1.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-1-2-optional">Exercise 1.2 (optional)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-1-3">Exercise 1.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-1-4-optional">Exercise 1.4 (optional)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-2-1">Exercise 2.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-2-2">Exercise 2.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-2-3">Exercise 2.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-2-4-meteorological-data-processing">Exercise 2.4: Meteorological data processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-x-bring-your-own-code-and-issues">Exercise X: Bring your own code and issues</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For helpers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../testing/">How to test this lesson</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Real-life compute cluster workflows</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Exercises</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/coderefinery/content/blob/main/content/exercises.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="exercises">
+<h1>Exercises<a class="headerlink" href="#exercises" title="Permalink to this heading"></a></h1>
+<div class="admonition-virtual-environments admonition">
+<p class="admonition-title">Virtual environments</p>
+<p>It’s a good idea to run the exercises in a virtual environment. This way
+you avoid conflicts between the dependencies for difference exercises and
+your project.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-VHJpdG9u" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-VHJpdG9u" name="VHJpdG9u" role="tab" tabindex="0">Triton</button><button aria-controls="panel-0-U2FnYSwgRnJhbSAmIEJldHp5" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-U2FnYSwgRnJhbSAmIEJldHp5" name="U2FnYSwgRnJhbSAmIEJldHp5" role="tab" tabindex="-1">Saga, Fram &amp; Betzy</button><button aria-controls="panel-0-Q1NDIENsdXN0ZXJz" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-Q1NDIENsdXN0ZXJz" name="Q1NDIENsdXN0ZXJz" role="tab" tabindex="-1">CSC Clusters</button></div><div aria-labelledby="tab-0-VHJpdG9u" class="sphinx-tabs-panel group-tab" id="panel-0-VHJpdG9u" name="VHJpdG9u" role="tabpanel" tabindex="0"><p>We recommend using conda on Triton. Note that you need to run
+<code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">activate</span></code> and not <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">    </span>module<span class="w"> </span>load<span class="w"> </span>miniconda
+<span class="w">    </span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>ENV_NAME<span class="w"> </span>python<span class="w"> </span>pip
+<span class="w">    </span><span class="nb">source</span><span class="w"> </span>activate<span class="w"> </span>ENV_NAME
+<span class="w">    </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-U2FnYSwgRnJhbSAmIEJldHp5" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-U2FnYSwgRnJhbSAmIEJldHp5" name="U2FnYSwgRnJhbSAmIEJldHp5" role="tabpanel" tabindex="0"><p>We recommend using conda on Triton. Note that you need to run
+<code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">activate</span></code> and not <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">    </span>module<span class="w"> </span>load<span class="w"> </span>Miniconda3
+<span class="w">    </span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>ENV_NAME<span class="w"> </span>python<span class="w"> </span>pip
+<span class="w">    </span><span class="nb">source</span><span class="w"> </span>activate<span class="w"> </span>ENV_NAME
+<span class="w">    </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-Q1NDIENsdXN0ZXJz" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-Q1NDIENsdXN0ZXJz" name="Q1NDIENsdXN0ZXJz" role="tabpanel" tabindex="0"><p>On CSC clusters, you can use <code class="docutils literal notranslate"><span class="pre">pip-containerize</span></code> to create a container
+for the virtual environment.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">    </span>module<span class="w"> </span>purge
+<span class="w">    </span>module<span class="w"> </span>load<span class="w"> </span>tykky
+<span class="w">    </span>mkdir<span class="w"> </span>MyEnv
+<span class="w">    </span>pip-containerize<span class="w"> </span>new<span class="w"> </span>--prefix<span class="w"> </span>MyEnv<span class="w"> </span>requirements.txt
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$PWD</span><span class="s2">/MyEnv/bin:</span><span class="nv">$PATH</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div></div>
+</div>
+<section id="exercise-1-1">
+<h2>Exercise 1.1<a class="headerlink" href="#exercise-1-1" title="Permalink to this heading"></a></h2>
+<p>Try to reproduce the results from <a class="reference internal" href="../num-cores/#num-cores"><span class="std std-ref">How to choose the number of cores by timing a series of runs</span></a> using the example code on
+your cluster.</p>
+</section>
+<section id="exercise-1-2-optional">
+<h2>Exercise 1.2 (optional)<a class="headerlink" href="#exercise-1-2-optional" title="Permalink to this heading"></a></h2>
+<p>Apply the methodology from <a class="reference internal" href="../num-cores/#num-cores"><span class="std std-ref">How to choose the number of cores by timing a series of runs</span></a> to your own code
+to find the optimal number of cores to use.</p>
+</section>
+<section id="exercise-1-3">
+<h2>Exercise 1.3<a class="headerlink" href="#exercise-1-3" title="Permalink to this heading"></a></h2>
+<p>Try to reproduce the results from <a class="reference internal" href="../memory/#memory"><span class="std std-ref">Measuring and choosing the right amount of memory</span></a> using the example code on
+your cluster.</p>
+</section>
+<section id="exercise-1-4-optional">
+<h2>Exercise 1.4 (optional)<a class="headerlink" href="#exercise-1-4-optional" title="Permalink to this heading"></a></h2>
+<p>Apply the methodology from <a class="reference internal" href="../memory/#memory"><span class="std std-ref">Measuring and choosing the right amount of memory</span></a> to your own code
+to find how much memory it uses.</p>
+</section>
+<section id="exercise-2-1">
+<h2>Exercise 2.1<a class="headerlink" href="#exercise-2-1" title="Permalink to this heading"></a></h2>
+<p>This code runs a parameter search with a fast simulation step. The
+function <code class="docutils literal notranslate"><span class="pre">simulate</span></code> runs on GPUs and is very fast. How would you
+improve the I/O performance of this code?</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">datafile</span> <span class="ow">in</span> <span class="n">datafiles</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">datafile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">simulate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;results.json&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="exercise-2-2">
+<h2>Exercise 2.2<a class="headerlink" href="#exercise-2-2" title="Permalink to this heading"></a></h2>
+<p>Find an example machine learning training script in
+<a class="reference external" href="https://github.com/coderefinery/CIFAR100_example">https://github.com/coderefinery/CIFAR100_example</a>.
+The data used is small enough to run on most systems, and the workflow
+is not especially problematic from I/O perspectice.</p>
+<ol class="arabic simple">
+<li><p>You are preparing to use the workflow for a significantly larger dataset.
+What should you take into account?</p></li>
+<li><p>Count the number of file operations in a single epoch.</p></li>
+<li><p>Study the code and find where the file operations actually happen.
+Can you improve the workflow to reduce load on the disk. Does this
+improve performance?</p></li>
+</ol>
+</section>
+<section id="exercise-2-3">
+<h2>Exercise 2.3<a class="headerlink" href="#exercise-2-3" title="Permalink to this heading"></a></h2>
+<p>Use dd to generate a large file. Try this on you local machine and
+on an HPC system. Which is faster? When would the HPC system be
+slower than a desktop?</p>
+</section>
+<section id="exercise-2-4-meteorological-data-processing">
+<h2>Exercise 2.4: Meteorological data processing<a class="headerlink" href="#exercise-2-4-meteorological-data-processing" title="Permalink to this heading"></a></h2>
+<p>Find an example meteorological data processing pipeline at
+<a class="reference external" href="https://github.com/coderefinery/meteorological-data-processing-exercise">https://github.com/coderefinery/meteorological-data-processing-exercise</a>.</p>
+<ol class="arabic simple">
+<li><p>Read the instructions in the readme and generate example data.</p></li>
+<li><p>Research commonly used data types for this type of data.</p></li>
+<li><p>When does the process load data? How would you study possible I/O issues?</p></li>
+<li><p>Can you improve data handling in the code?</p></li>
+</ol>
+</section>
+<section id="exercise-x-bring-your-own-code-and-issues">
+<h2>Exercise X: Bring your own code and issues<a class="headerlink" href="#exercise-x-bring-your-own-code-and-issues" title="Permalink to this heading"></a></h2>
+<p>Study I/O patterns in your own code. How much time does your code spend
+waiting for I/O? Is this a significant portion of the time? How can you
+improve this?</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../io-best-practices/" class="btn btn-neutral float-left" title="I/O Best Practices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../testing/" class="btn btn-neutral float-right" title="How to test this lesson" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job scheduling and Slurm basics &mdash; Real-life compute cluster workflows  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_lesson.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/term_role_formatting.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_rtd_theme_ext_color_contrast.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+
+  
+    <link rel="shortcut icon" href="../_static/coderefinery.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="How to choose the number of cores by timing a series of runs" href="../num-cores/" />
+    <link rel="prev" title="Tuesdays tools and techniques for HPC: Real-life compute cluster workflows" href="../" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../" class="icon icon-home">
+            Real-life compute cluster workflows
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Episodes</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Job scheduling and Slurm basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-a-supercomputer-or-cluster">What is a supercomputer or cluster?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-slurm">What is Slurm?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-visual-analogy">A visual analogy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-slurm-job-script">Example Slurm job script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#submitting-and-monitoring-a-slurm-job">Submitting and monitoring a Slurm job</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-choose-job-parameters">How to choose job parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-if-the-job-is-a-series-of-independent-tasks">What if the job is a series of independent tasks?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-if-the-resource-use-of-a-job-is-uneven">What if the resource use of a job is uneven?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../num-cores/">How to choose the number of cores by timing a series of runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory/">Measuring and choosing the right amount of memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io-best-practices/">I/O Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../exercises/">Exercises</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For helpers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../testing/">How to test this lesson</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Real-life compute cluster workflows</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Job scheduling and Slurm basics</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/coderefinery/content/blob/main/content/scheduling.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="job-scheduling-and-slurm-basics">
+<h1>Job scheduling and Slurm basics<a class="headerlink" href="#job-scheduling-and-slurm-basics" title="Permalink to this heading"></a></h1>
+<div class="admonition-learning-goals admonition">
+<p class="admonition-title">Learning goals</p>
+<ul class="simple">
+<li><p>We understand what a job scheduler tries to do.</p></li>
+<li><p>We understand the dimensions of a job and how to specify them.</p></li>
+<li><p>Understand that job parameters affect not only <strong>resource use</strong> but also <strong>how long
+it will queue</strong>.</p></li>
+<li><p>Get a visual understanding of what a job scheduler does.</p></li>
+</ul>
+</div>
+<section id="what-is-a-supercomputer-or-cluster">
+<h2>What is a supercomputer or cluster?<a class="headerlink" href="#what-is-a-supercomputer-or-cluster" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Think of it as a <strong>large collection of computers</strong> that are connected together.</p></li>
+<li><p>Each of these computers is called a node and clusters often have thousands of such nodes.</p></li>
+<li><p>Each such <strong>compute node</strong> often has multiple cores (CPUs) and some memory.</p></li>
+<li><p>The cores/CPUs are often not faster than those in your laptop, but there are many more of them.</p></li>
+<li><p>The nodes are connected together by a <strong>high-speed network</strong>.</p></li>
+<li><p>The nodes typically share a <strong>common file system</strong>.</p></li>
+<li><p>We connect to clusters through <strong>login nodes</strong> and submit jobs to the <strong>compute nodes</strong>.</p></li>
+</ul>
+</section>
+<section id="what-is-slurm">
+<h2>What is Slurm?<a class="headerlink" href="#what-is-slurm" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Provides a framework for <strong>scheduling/queuing</strong> and monitoring jobs on the compute nodes.</p></li>
+<li><p>It’s like the “maitre d’” at a restaurant.</p></li>
+<li><p>Available at most supercomputers: most widely used job scheduler in high-performance computing.</p></li>
+<li><p>Open-source.</p></li>
+</ul>
+</section>
+<section id="a-visual-analogy">
+<h2>A visual analogy<a class="headerlink" href="#a-visual-analogy" title="Permalink to this heading"></a></h2>
+<p>Do you remember playing this game?</p>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="../_images/typical-tetris-game.png"><img alt="A typical Tetris game in play." src="../_images/typical-tetris-game.png" style="width: 30%;" /></a>
+<figcaption>
+<p><span class="caption-text">A typical Tetris game in play. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Tetris">Wikipedia</a> (public domain).</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>For a <strong>job scheduler</strong>, computations look a bit like this:</p>
+<figure class="align-default" id="id2">
+<a class="reference internal image-reference" href="../_images/scheduler-blocks.png"><img alt="Visual analogy of a job scheduler." src="../_images/scheduler-blocks.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">Visual analogy of a job scheduler. Calculations are like blocks that need to be
+placed on the resources.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition-discussion discussion important admonition" id="discussion-0">
+<p class="admonition-title">Discussion</p>
+<ul class="simple">
+<li><p>Calculations are rectangular in the eyes of the scheduler.</p></li>
+<li><p>The scheduler tries to fit the jobs into the available resources. In other
+words to “keep the bottom row always full”.</p></li>
+<li><p>Motivation for the job scheduler: keep all cores busy all the time.</p></li>
+<li><p>Motivation for you as a user: get your job started and finished as soon as possible.</p></li>
+<li><p>There are long jobs that take time but only few cores (example: violet block).</p></li>
+<li><p>There are wide jobs that use many cores (example: green block).</p></li>
+<li><p>Cost of a job: the area of the rectangle.</p></li>
+<li><p>Now imagine there is one more dimension: memory. The memory and number of cores are not fully independent.</p></li>
+<li><p>The scheduler actually “plays Tetris with cubes”.</p></li>
+</ul>
+</div>
+<p>Now we better understand that choosing the right job parameters can be important
+to determine when a job will start and how long it will take to finish:</p>
+<figure class="align-default" id="id3">
+<a class="reference internal image-reference" href="../_images/backfilling.png"><img alt="Visual analogy of a job scheduler with backfilling." src="../_images/backfilling.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">Example for backfilling: Imagine the pink job just started but suddenly
+crashes. What will the scheduler try to do?</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="example-slurm-job-script">
+<h2>Example Slurm job script<a class="headerlink" href="#example-slurm-job-script" title="Permalink to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env bash</span>
+
+<span class="c1">#SBATCH --account=MYPROJECT</span>
+<span class="c1">#SBATCH --job-name=&#39;example&#39;</span>
+<span class="c1">#SBATCH --time=0-00:05:00</span>
+<span class="c1">#SBATCH --mem-per-cpu=1500M</span>
+<span class="c1">#SBATCH --ntasks=4</span>
+
+<span class="c1"># here is the actual command that will be executed</span>
+<span class="c1"># sometimes it is a series of commands where we copy data, load modules, etc.</span>
+./mycode<span class="w"> </span>--arguments
+</pre></div>
+</div>
+<p>Depending on the cluster we might need to specify:</p>
+<ul class="simple">
+<li><p>Partition: <code class="docutils literal notranslate"><span class="pre">#SBATCH</span> <span class="pre">--partition=SOMEPARTITION</span></code></p></li>
+<li><p>Number of nodes: <code class="docutils literal notranslate"><span class="pre">#SBATCH</span> <span class="pre">--nodes=2</span></code></p></li>
+<li><p>Number of tasks per node: <code class="docutils literal notranslate"><span class="pre">#SBATCH</span> <span class="pre">--ntasks-per-node=4</span></code></p></li>
+</ul>
+<p>Options that will become handy one day:</p>
+<ul class="simple">
+<li><p>Changing the name of the output and error files:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">#SBATCH</span> <span class="pre">--output=slurm-%j.out</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#SBATCH</span> <span class="pre">--error=slurm-%j.err</span></code></p></li>
+</ul>
+</li>
+<li><p>Making the job dependent on another job: <code class="docutils literal notranslate"><span class="pre">#SBATCH</span> <span class="pre">--dependency=afterok:123456</span></code></p></li>
+<li><p>Submitting an array of jobs: <code class="docutils literal notranslate"><span class="pre">#SBATCH</span> <span class="pre">--array=1-10</span></code></p></li>
+</ul>
+<p>One can specify and fine-tune a lot more:
+<a class="reference external" href="https://slurm.schedmd.com/sbatch.html">https://slurm.schedmd.com/sbatch.html</a></p>
+</section>
+<section id="submitting-and-monitoring-a-slurm-job">
+<h2>Submitting and monitoring a Slurm job<a class="headerlink" href="#submitting-and-monitoring-a-slurm-job" title="Permalink to this heading"></a></h2>
+<p>We recommend that you write a script like the one above and submit it with <code class="docutils literal notranslate"><span class="pre">sbatch</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sbatch<span class="w"> </span>my_job.sh
+</pre></div>
+</div>
+<p>You can also specify the job parameters directly on the command line:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sbatch<span class="w"> </span>--account<span class="o">=</span>MYPROJECT<span class="w"> </span>--job-name<span class="o">=</span><span class="s1">&#39;example&#39;</span><span class="w"> </span>--time<span class="o">=</span><span class="m">0</span>-00:05:00<span class="w"> </span>--mem-per-cpu<span class="o">=</span>1500M<span class="w"> </span>--ntasks<span class="o">=</span><span class="m">4</span><span class="w"> </span>./mycode<span class="w"> </span>--arguments
+</pre></div>
+</div>
+<p>However, we recommend to use scripts since a <strong>script is often more reproducible</strong>
+since you can find it few weeks later and know what you did. Or what your colleague
+did who already left the group.</p>
+<p>And here are the two most important commands to monitor your jobs:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># list all of your pending or running jobs</span>
+$<span class="w"> </span>squeue<span class="w"> </span>--me
+
+<span class="c1"># cancel a job</span>
+$<span class="w"> </span>scancel<span class="w"> </span>JOBID
+</pre></div>
+</div>
+<p>There exist many more.</p>
+</section>
+<section id="how-to-choose-job-parameters">
+<h2>How to choose job parameters<a class="headerlink" href="#how-to-choose-job-parameters" title="Permalink to this heading"></a></h2>
+<p>Back to our example script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env bash</span>
+
+<span class="c1">#SBATCH --account=MYPROJECT</span>
+<span class="c1">#SBATCH --job-name=&#39;example&#39;</span>
+<span class="c1">#SBATCH --time=0-00:05:00</span>
+<span class="c1">#SBATCH --mem-per-cpu=1500M</span>
+<span class="c1">#SBATCH --ntasks=4</span>
+
+<span class="c1"># here is the actual command that will be executed</span>
+<span class="c1"># sometimes it is a series of commands where we copy data, load modules, etc.</span>
+./mycode<span class="w"> </span>--arguments
+</pre></div>
+</div>
+<p>Choosing the <strong>time</strong> (<code class="docutils literal notranslate"><span class="pre">--time</span></code>):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--time=days-hours:minutes:seconds</span></code></p></li>
+<li><p>Most clusters have time limits for jobs (a day or a week or two weeks).</p></li>
+<li><p>Running your calculation for the first time? Start small and add more as you grow it.</p></li>
+<li><p>When you have an idea of how long a program would take to run, add perhaps 20% to the time.</p></li>
+<li><p>If you ask for too much time, your job will wait longer in the queue.</p></li>
+<li><p>When debugging a problem, try to reduce the system size and job time to reduce queue time.</p></li>
+</ul>
+<p>Choosing the <strong>number of cores</strong> (<code class="docutils literal notranslate"><span class="pre">--ntasks</span></code>):</p>
+<ul class="simple">
+<li><p>We have a separate episode on this: <a class="reference internal" href="../num-cores/#num-cores"><span class="std std-ref">How to choose the number of cores by timing a series of runs</span></a>.</p></li>
+</ul>
+<p>Choosing the <strong>memory</strong> (<code class="docutils literal notranslate"><span class="pre">--mem-per-cpu</span></code>):</p>
+<ul class="simple">
+<li><p>We have a separate episode on this: <a class="reference internal" href="../memory/#memory"><span class="std std-ref">Measuring and choosing the right amount of memory</span></a>.</p></li>
+</ul>
+</section>
+<section id="what-if-the-job-is-a-series-of-independent-tasks">
+<h2>What if the job is a series of independent tasks?<a class="headerlink" href="#what-if-the-job-is-a-series-of-independent-tasks" title="Permalink to this heading"></a></h2>
+<p>Many jobs that are long-running iterate over a set of tasks or steps which
+don’t depend on each other:</p>
+<figure class="align-default" id="id4">
+<a class="reference internal image-reference" href="../_images/jobs-loop.png"><img alt="A long calculation that is a series of steps that don't depend on each other." src="../_images/jobs-loop.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">A long calculation that is a series of steps that don’t depend on each other.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id5">
+<a class="reference internal image-reference" href="../_images/jobs-independent.png"><img alt="The same calculation as above but split into independent tasks." src="../_images/jobs-independent.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">The same calculation as above but split into independent tasks.</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition-discussion discussion important admonition" id="discussion-1">
+<p class="admonition-title">Discussion</p>
+<p>Discuss the advantages and disadvantages of splitting a job into independent tasks.</p>
+</div>
+</section>
+<section id="what-if-the-resource-use-of-a-job-is-uneven">
+<h2>What if the resource use of a job is uneven?<a class="headerlink" href="#what-if-the-resource-use-of-a-job-is-uneven" title="Permalink to this heading"></a></h2>
+<p>We mentioned earlier that to a job scheduler all jobs look like rectangles (or
+cubes). But when you look at the resource use of a job, it might be uneven:</p>
+<figure class="align-default" id="id6">
+<a class="reference internal image-reference" href="../_images/uneven.png"><img alt="Visual analogy of a job with uneven resource use." src="../_images/uneven.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">Example for a job where the resource use (violet color) is uneven over time.
+Gray color represents the resources which we requested from the scheduler.</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition-discussion discussion important admonition" id="discussion-2">
+<p class="admonition-title">Discussion</p>
+<p>In this case it might be beneficial to split the job into smaller pieces.
+And run them in sequence. Where would you cut in the above example?</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../" class="btn btn-neutral float-left" title="Tuesdays tools and techniques for HPC: Real-life compute cluster workflows" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../num-cores/" class="btn btn-neutral float-right" title="How to choose the number of cores by timing a series of runs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

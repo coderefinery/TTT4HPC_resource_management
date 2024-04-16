@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to choose the number of cores by timing a series of runs &mdash; Real-life compute cluster workflows  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_lesson.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/term_role_formatting.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_rtd_theme_ext_color_contrast.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+
+  
+    <link rel="shortcut icon" href="../_static/coderefinery.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Measuring and choosing the right amount of memory" href="../memory/" />
+    <link rel="prev" title="Job scheduling and Slurm basics" href="../scheduling/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../" class="icon icon-home">
+            Real-life compute cluster workflows
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Episodes</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../scheduling/">Job scheduling and Slurm basics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to choose the number of cores by timing a series of runs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#why-it-matters">Why it matters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-project-simulating-the-motion-of-planets">Example project: simulating the motion of planets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-download-and-compile-the-example-code">How to download and compile the example code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#before-we-start-let-us-make-the-system-as-small-as-possible-but-not-smaller">Before we start: let us make the system as small as possible, but not smaller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#series-of-calculations-by-varying-the-number-of-cores">Series of calculations by varying the number of cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#if-it-does-not-scale-what-can-be-possible-reasons">If it does not scale, what can be possible reasons?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-mpi-and-openmp-and-how-can-i-tell">What is MPI and OpenMP and how can I tell?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../memory/">Measuring and choosing the right amount of memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io-best-practices/">I/O Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../exercises/">Exercises</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For helpers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../testing/">How to test this lesson</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Real-life compute cluster workflows</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">How to choose the number of cores by timing a series of runs</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/coderefinery/content/blob/main/content/num-cores.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="how-to-choose-the-number-of-cores-by-timing-a-series-of-runs">
+<span id="num-cores"></span><h1>How to choose the number of cores by timing a series of runs<a class="headerlink" href="#how-to-choose-the-number-of-cores-by-timing-a-series-of-runs" title="Permalink to this heading"></a></h1>
+<div class="admonition-learning-goals admonition">
+<p class="admonition-title">Learning goals</p>
+<ul class="simple">
+<li><p>Being able to reduce the system size to a <strong>small enough size</strong> to be able to
+test the scaling of a code.</p></li>
+<li><p>Timing a <strong>series of runs</strong> with increasing number of cores.</p></li>
+</ul>
+</div>
+<div class="admonition-beyond-the-scope-of-this-tutorial admonition">
+<p class="admonition-title">Beyond the scope of this tutorial</p>
+<ul class="simple">
+<li><p>Profiling a run to find out <strong>why</strong> it does not scale.</p></li>
+</ul>
+</div>
+<p>In this demonstration or exercise we will run the same code on a series of
+cores and measure the time spent in the code. This is a relatively simple
+exercise which can be done on any cluster and is a very good starting point
+before running a large number of jobs or before more detailed profiling.</p>
+<section id="why-it-matters">
+<h2>Why it matters<a class="headerlink" href="#why-it-matters" title="Permalink to this heading"></a></h2>
+<p>We request resources from the scheduler (queuing system).  But the scheduler
+cannot tell how long the job will run and what resources it will really
+consume.  Just the fact that I am asking the scheduler for 40 cores does not
+mean that the code will actually run in parallel and use all of them.</p>
+<p>Just because a website says that code X can run in parallel or “scales well”
+does not mean that it will scale well for the particular feature/system/input
+at hand.</p>
+<p>Therefore <strong>it is important to verify and calibrate this setting</strong> for your use
+case before computing very many similar jobs. Below we will show few
+strategies.</p>
+<p>Note that <strong>you don’t have to go through this for every single run</strong>. This is
+just to calibrate a job type. If many of your jobs have similar resource
+demands, then the calibration will probably be meaningful for all of them.</p>
+<ul class="simple">
+<li><p>Asking for too few cores can lead to underused nodes or longer run time</p></li>
+<li><p>Asking for too many cores can mean wasted CPU resources</p></li>
+<li><p>Asking for too much can mean a lot longer queuing</p></li>
+</ul>
+</section>
+<section id="example-project-simulating-the-motion-of-planets">
+<h2>Example project: simulating the motion of planets<a class="headerlink" href="#example-project-simulating-the-motion-of-planets" title="Permalink to this heading"></a></h2>
+<p>The <a class="reference external" href="https://github.com/coderefinery/TTT4HPC_resource_management/blob/main/examples/planets.c">example
+code</a>
+that we will study is a simple N-body simulation written in C. It is not important or expected
+that we understand the code in any detail.</p>
+<p>The big picture is that the code simulates the motion of a number of planets:</p>
+<ul class="simple">
+<li><p>We can choose the number of planets.</p></li>
+<li><p>Each planet starts with a random position and velocity.</p></li>
+<li><p>At each time step, the code calculates the gravitational force between each pair of planets.</p></li>
+<li><p>The code updates the velocity and position of each planet.</p></li>
+<li><p>We can choose the number of time steps.</p></li>
+<li><p>The code can run on multiple cores and each core compute the gravitational force acting on a subset of planets.</p></li>
+<li><p>Before each force computation, the code needs to exchange the positions of planets between cores.</p></li>
+</ul>
+<p>The code accepts command-line arguments to specify the number of planets, the
+number of time steps, and a network penalty (has to be at least 1) that
+simulates the cost of exchanging data between cores.</p>
+<p>Here is an example run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./planets<span class="w"> </span>--count<span class="o">=</span><span class="m">30000</span><span class="w"> </span>--steps<span class="o">=</span><span class="m">10000</span><span class="w"> </span>--network-penalty<span class="o">=</span><span class="m">200</span>
+
+<span class="go">Simulation completed on 4 cores after 11385 sec: 30000 planets and 10000 steps.</span>
+</pre></div>
+</div>
+<p>It does not matter so much what the code does. Here we wish to <strong>find out how
+this code scales</strong> and what an optimum number of cores for it might be on our
+system.  <strong>This will give you the tools to do a similar study for your own
+code</strong>.</p>
+</section>
+<section id="how-to-download-and-compile-the-example-code">
+<h2>How to download and compile the example code<a class="headerlink" href="#how-to-download-and-compile-the-example-code" title="Permalink to this heading"></a></h2>
+<p>You can download the code directly from the web to the cluster
+(click
+<a class="reference external" href="https://github.com/coderefinery/TTT4HPC_resource_management/blob/main/examples/planets.c">here</a>
+if you first wish to inspect the code):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>wget<span class="w"> </span>https://raw.githubusercontent.com/coderefinery/TTT4HPC_resource_management/main/examples/planets.c
+</pre></div>
+</div>
+<p>We can build our example binary with this script (<code class="docutils literal notranslate"><span class="pre">compile.sh</span></code>):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env bash</span>
+
+mpicc<span class="w"> </span>-O3<span class="w"> </span>planets.c<span class="w"> </span>-o<span class="w"> </span>planets<span class="w"> </span>-lm
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>You typically need to load a compiler module before compiling.</p></li>
+<li><p>Cray-type systems have a special compiler wrapper <code class="docutils literal notranslate"><span class="pre">cc</span></code> that you can use instead of <code class="docutils literal notranslate"><span class="pre">mpicc</span></code>.</p></li>
+</ul>
+</section>
+<section id="before-we-start-let-us-make-the-system-as-small-as-possible-but-not-smaller">
+<h2>Before we start: let us make the system as small as possible, but not smaller<a class="headerlink" href="#before-we-start-let-us-make-the-system-as-small-as-possible-but-not-smaller" title="Permalink to this heading"></a></h2>
+<p><strong>This is such an important skill and often overlooked</strong>. A good test run
+or debug run is as short as possible and as large as necessary.</p>
+<p>Instead of running the code on 10000 steps and waiting for hours, perhaps we
+can get the same information from 100 steps? Here we assume that the total run
+time is proportional to the number of steps. This is relatively easy to check.</p>
+<p>Therefore, before embarking on a scaling study, let us first reduce the number of steps:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./planets<span class="w"> </span>--count<span class="o">=</span><span class="m">30000</span><span class="w"> </span>--steps<span class="o">=</span><span class="m">100</span><span class="w"> </span>--network-penalty<span class="o">=</span><span class="m">200</span>
+
+<span class="go">Simulation completed on 4 cores after 113.81 sec: 30000 planets and 100 steps.</span>
+</pre></div>
+</div>
+<p>The run does not have to be realistic in terms of the research question. It should
+be however representative for the real run later.</p>
+</section>
+<section id="series-of-calculations-by-varying-the-number-of-cores">
+<h2>Series of calculations by varying the number of cores<a class="headerlink" href="#series-of-calculations-by-varying-the-number-of-cores" title="Permalink to this heading"></a></h2>
+<p>Now take the following example script but you need to adapt it for your cluster:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env bash</span>
+
+<span class="c1">#SBATCH --account=MYPROJECT</span>
+
+<span class="c1">#SBATCH --job-name=&#39;8-core&#39;</span>
+<span class="c1">#SBATCH --time=0-00:09:00</span>
+<span class="hll"><span class="c1">#SBATCH --ntasks=8</span>
+</span><span class="hll"><span class="c1">#SBATCH -o 8.out</span>
+</span>
+<span class="n">module</span> <span class="n">purge</span>
+<span class="n">module</span> <span class="n">load</span> <span class="n">foss</span><span class="o">/</span><span class="mi">2022</span><span class="n">b</span>
+
+<span class="n">srun</span> <span class="o">./</span><span class="n">planets</span> <span class="o">--</span><span class="n">count</span><span class="o">=</span><span class="mi">30000</span> <span class="o">--</span><span class="n">steps</span><span class="o">=</span><span class="mi">100</span> <span class="o">--</span><span class="n">network</span><span class="o">-</span><span class="n">penalty</span><span class="o">=</span><span class="mi">200</span>
+</pre></div>
+</div>
+<p>You need to adapt:</p>
+<ul class="simple">
+<li><p>The account name.</p></li>
+<li><p>Some clusters require specifying the memory per core.</p></li>
+<li><p>Some clusters use <code class="docutils literal notranslate"><span class="pre">mpirun</span></code> or <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> instead of <code class="docutils literal notranslate"><span class="pre">srun</span></code>.</p></li>
+</ul>
+<p>Run a series of calculations on 1, 2, 4, 8, 16, 32, 64, 128, 256, … cores.
+The numbers do not have to be powers of two, but this is often what people do.</p>
+<p>You might get the following timings:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>grep<span class="w"> </span><span class="s2">&quot;Simulation completed&quot;</span><span class="w"> </span>*.out<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-n
+
+<span class="go">1.out:Simulation completed on 1 cores after 419.88 sec: 30000 planets and 100 steps.</span>
+<span class="go">2.out:Simulation completed on 2 cores after 213.31 sec: 30000 planets and 100 steps.</span>
+<span class="go">4.out:Simulation completed on 4 cores after 113.81 sec: 30000 planets and 100 steps.</span>
+<span class="go">8.out:Simulation completed on 8 cores after 63.33 sec: 30000 planets and 100 steps.</span>
+<span class="go">16.out:Simulation completed on 16 cores after 34.27 sec: 30000 planets and 100 steps.</span>
+<span class="go">32.out:Simulation completed on 32 cores after 19.94 sec: 30000 planets and 100 steps.</span>
+<span class="go">64.out:Simulation completed on 64 cores after 14.78 sec: 30000 planets and 100 steps.</span>
+<span class="go">128.out:Simulation completed on 128 cores after 12.40 sec: 30000 planets and 100 steps.</span>
+<span class="go">256.out:Simulation completed on 256 cores after 15.92 sec: 30000 planets and 100 steps.</span>
+</pre></div>
+</div>
+<p>Or in tabular form:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Number of cores</p></th>
+<th class="head"><p>Time spent</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>419.88 sec</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>213.31 sec</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>113.81 sec</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>63.33 sec</p></td>
+</tr>
+<tr class="row-even"><td><p>16</p></td>
+<td><p>34.27 sec</p></td>
+</tr>
+<tr class="row-odd"><td><p>32</p></td>
+<td><p>19.94 sec</p></td>
+</tr>
+<tr class="row-even"><td><p>64</p></td>
+<td><p>14.78 sec</p></td>
+</tr>
+<tr class="row-odd"><td><p>128</p></td>
+<td><p>12.40 sec</p></td>
+</tr>
+<tr class="row-even"><td><p>256</p></td>
+<td><p>15.92 sec</p></td>
+</tr>
+</tbody>
+</table>
+<p>What can we conclude? And how can we explain it?</p>
+<p>Conclusions:</p>
+<ul class="simple">
+<li><p>For this particular example it does not make sense to go much beyond 16 cores.</p></li>
+<li><p>Above 32 cores communication probably starts to dominate over computation.</p></li>
+</ul>
+</section>
+<section id="if-it-does-not-scale-what-can-be-possible-reasons">
+<h2>If it does not scale, what can be possible reasons?<a class="headerlink" href="#if-it-does-not-scale-what-can-be-possible-reasons" title="Permalink to this heading"></a></h2>
+<p>Here are typical problems:</p>
+<ul class="simple">
+<li><p>At some point more time is spent communicating than computing</p></li>
+<li><p>Memory-bound jobs saturate the memory bandwidth</p></li>
+<li><p>At some point the non-parallelized code section dominates the compute time (<a class="reference external" href="https://en.wikipedia.org/wiki/Amdahl%27s_law">Amdahl’s law</a>)</p></li>
+</ul>
+</section>
+<section id="what-is-mpi-and-openmp-and-how-can-i-tell">
+<h2>What is MPI and OpenMP and how can I tell?<a class="headerlink" href="#what-is-mpi-and-openmp-and-how-can-i-tell" title="Permalink to this heading"></a></h2>
+<p>These two parallelization schemes are very common (but there exist other schemes):</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Message_Passing_Interface">Message passing interface</a>:
+typically each task allocates its own memory, tasks communicate via messages.
+It is no problem to go beyond one node.</p></li>
+<li><p><a class="reference external" href="https://www.openmp.org/">OpenMP</a>:
+threads share memory and communicate through memory.
+We cannot go beyond one node.</p></li>
+</ul>
+<p><strong>How to tell if the code is using one of the two?</strong></p>
+<ul class="simple">
+<li><p>If you wrote the software: then you probably know</p></li>
+<li><p>If it is written by somebody else:</p>
+<ul>
+<li><p>It can be difficult to tell</p></li>
+<li><p>Consult manual for the software or contact support (theirs or ours)</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Python/R/Matlab</strong></p>
+<ul class="simple">
+<li><p>Small self-written scripts are often not parallelized</p></li>
+<li><p>Libraries that you include in your scripts can use parallelization (e.g.
+<code class="docutils literal notranslate"><span class="pre">mpi4py</span></code> or <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>)</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../scheduling/" class="btn btn-neutral float-left" title="Job scheduling and Slurm basics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../memory/" class="btn btn-neutral float-right" title="Measuring and choosing the right amount of memory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

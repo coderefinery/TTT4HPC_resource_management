@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I/O Best Practices &mdash; Real-life compute cluster workflows  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_lesson.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/term_role_formatting.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_rtd_theme_ext_color_contrast.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+
+  
+    <link rel="shortcut icon" href="../_static/coderefinery.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Exercises" href="../exercises/" />
+    <link rel="prev" title="Measuring and choosing the right amount of memory" href="../memory/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../" class="icon icon-home">
+            Real-life compute cluster workflows
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Episodes</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../scheduling/">Job scheduling and Slurm basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../num-cores/">How to choose the number of cores by timing a series of runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory/">Measuring and choosing the right amount of memory</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">I/O Best Practices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-primer-how-files-are-accessed">Quick primer: How files are accessed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-format-demos">Data Format Demos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#i-o-workflows">I/O Workflows</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#shared-and-network-file-systems">Shared and Network File Systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-system-is-slow">File System is Slow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#local-disks-and-ram-disks">Local Disks and RAM Disks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#local-disks">Local Disks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ramdisk">Ramdisk</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#machine-learning-and-large-data">Machine Learning and Large data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../exercises/">Exercises</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For helpers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../testing/">How to test this lesson</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Real-life compute cluster workflows</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">I/O Best Practices</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/coderefinery/content/blob/main/content/io-best-practices.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="i-o-best-practices">
+<h1>I/O Best Practices<a class="headerlink" href="#i-o-best-practices" title="Permalink to this heading"></a></h1>
+<div class="admonition-objectives objectives admonition" id="objectives-0">
+<p class="admonition-title">Objectives</p>
+<ul class="simple">
+<li><p>Reading files is a common bottleneck</p></li>
+<li><p>One large file is usually faster than many small files</p></li>
+<li><p>Local hard disks and ramdisks can be much faster</p></li>
+</ul>
+</div>
+<div class="admonition-prerequisites prerequisites admonition" id="prerequisites-0">
+<p class="admonition-title">Prerequisites</p>
+<ul class="simple">
+<li><p>No prerequisites for following the demo</p></li>
+</ul>
+<p>You can find the demo code and setup instructions at
+<a class="reference external" href="https://github.com/coderefinery/ttt4hpc-io-examples">https://github.com/coderefinery/ttt4hpc-io-examples</a>.</p>
+<p>If you wish to run the code, you will need Python and the
+packages listed in requirements.txt. You can install them with
+<cite>pip install -r requirements.txt</cite>.</p>
+</div>
+<p>In this lesson we discuss common I/O problems, diagnosing them and
+avoiding them. I/O issues are usually about how the workflow is
+structured and can be fixed or alleviated by restucturing, moving
+the reads and writes to move convenient times or using the right
+storage system.</p>
+<p>This lesson is mostly a demonstration, with some general discussion.
+We recommend you follow the demonstration and</p>
+<ul class="simple">
+<li><p>Filesystem can be the slowest part of many jobs</p></li>
+<li><p>networked filesystems tend to be best at large files, bad at many small</p></li>
+</ul>
+<section id="quick-primer-how-files-are-accessed">
+<h2>Quick primer: How files are accessed<a class="headerlink" href="#quick-primer-how-files-are-accessed" title="Permalink to this heading"></a></h2>
+<figure class="align-default" id="id1">
+<img alt="../_images/file_explanation.svg" src="../_images/file_explanation.svg" /><figcaption>
+<p><span class="caption-text">Figure 1: File structure</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Files on file systems consist of:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>metadata (who owns the file, when was the file last modified,
+how big is the file)</p></li>
+<li><p>the file contents (actual contents of the data)</p></li>
+</ul>
+</div></blockquote>
+<p>Programs check the metadata with <code class="docutils literal notranslate"><span class="pre">stat</span></code>-calls. File contents are accessed
+by creating a file descriptor with with an <code class="docutils literal notranslate"><span class="pre">open</span></code>-call and then file
+contents are either read using a <code class="docutils literal notranslate"><span class="pre">read</span></code>-call or written using a
+<code class="docutils literal notranslate"><span class="pre">write</span></code>-call.</p>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-l</span></code> will check the metadata of a file while
+<code class="docutils literal notranslate"><span class="pre">cat</span></code> will open the file contents.</p>
+<figure class="align-default" id="id2">
+<img alt="../_images/file_access.svg" src="../_images/file_access.svg" /><figcaption>
+<p><span class="caption-text">Figure 2: Different programs might access files in different ways</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="data-format-demos">
+<h2>Data Format Demos<a class="headerlink" href="#data-format-demos" title="Permalink to this heading"></a></h2>
+<p>We show the effect of reading many small files vs one large file.
+In a shared file system, file system operations are slower than
+one would expect from experience with a local disk. Files are
+stored on many disks and reading one usually requires some
+communication between nodes. But it’s actually a bit worse than
+that. The file system needs to find metadata for the file first,
+to determine where to actually find the data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The demo examples are at
+<a class="reference external" href="https://github.com/coderefinery/ttt4hpc-io-examples">https://github.com/coderefinery/ttt4hpc-io-examples</a>.
+Expected results are included in collapsed sections titles
+“expected result”.</p>
+</div>
+<ol class="arabic simple">
+<li><p><strong>Setup</strong></p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone the repository and setup</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/coderefinery/ttt4hpc-io-examples
+<span class="nb">cd</span><span class="w"> </span>ttt4hpc-io-examples
+pip<span class="w"> </span>install<span class="w"> </span>--extra-index-url<span class="w"> </span>https://download.pytorch.org/whl/cpu<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="nb">cd</span><span class="w"> </span>data_formats_1
+python<span class="w"> </span>generate_data.py
+python<span class="w"> </span>create_archive.py
+</pre></div>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">expected result</p>
+<p>This should create a folder <cite>data</cite> with 7300 csv files and an
+archive <cite>data.tar</cite> containing the same files.</p>
+</div>
+<p>First, let’s check the files we created. They are in the <cite>data</cite>
+folder. Each csv file contains an activity measurement for each
+hour of the day. There is data for 20 year, so 175200 rows all
+together in 7300 files.</p>
+<ol class="arabic simple" start="2">
+<li><p><strong>Naive example reading all the files</strong></p></li>
+</ol>
+<p>Here we read all of these files into memory and create a pandas
+dataframe. The approach in <cite>read_files_naive.py</cite> is the simplest
+way we would first write this. The version in <cite>read_files.py</cite> only
+reads the files in the loop, and gives a more fair comparison.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">strace</span> <span class="o">-</span><span class="n">c</span> <span class="o">-</span><span class="n">e</span> <span class="n">trace</span><span class="o">=%</span><span class="n">desc</span> <span class="n">python</span> <span class="n">read_files</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">expected result</p>
+<p>This should show a large number of file reads. In this case, it
+takes 3.6 seconds and opens 8028 files.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Time<span class="w"> </span>taken:<span class="w"> </span><span class="m">3</span>.6240997314453125<span class="w"> </span>seconds
+Mean:<span class="w"> </span><span class="m">2</span>.4964045698924733
+%<span class="w"> </span><span class="nb">time</span><span class="w">     </span>seconds<span class="w">  </span>usecs/call<span class="w">     </span>calls<span class="w">    </span>errors<span class="w"> </span>syscall
+------<span class="w"> </span>-----------<span class="w"> </span>-----------<span class="w"> </span>---------<span class="w"> </span>---------<span class="w"> </span>----------------
+<span class="w"> </span><span class="m">31</span>.83<span class="w">    </span><span class="m">0</span>.441350<span class="w">          </span><span class="m">54</span><span class="w">      </span><span class="m">8028</span><span class="w">        </span><span class="m">23</span><span class="w"> </span>open
+<span class="w"> </span><span class="m">20</span>.72<span class="w">    </span><span class="m">0</span>.287255<span class="w">          </span><span class="m">18</span><span class="w">     </span><span class="m">15907</span><span class="w">           </span><span class="nb">read</span>
+<span class="w"> </span><span class="m">18</span>.65<span class="w">    </span><span class="m">0</span>.258579<span class="w">          </span><span class="m">31</span><span class="w">      </span><span class="m">8318</span><span class="w">           </span>close
+<span class="w"> </span><span class="m">18</span>.09<span class="w">    </span><span class="m">0</span>.250797<span class="w">          </span><span class="m">15</span><span class="w">     </span><span class="m">15907</span><span class="w">           </span>fstat
+<span class="w">  </span><span class="m">4</span>.88<span class="w">    </span><span class="m">0</span>.067700<span class="w">           </span><span class="m">4</span><span class="w">     </span><span class="m">15806</span><span class="w">         </span><span class="m">3</span><span class="w"> </span>lseek
+<span class="w">  </span><span class="m">2</span>.35<span class="w">    </span><span class="m">0</span>.032638<span class="w">           </span><span class="m">4</span><span class="w">      </span><span class="m">7903</span><span class="w">      </span><span class="m">7896</span><span class="w"> </span>ioctl
+<span class="w">  </span><span class="m">1</span>.66<span class="w">    </span><span class="m">0</span>.022961<span class="w">          </span><span class="m">45</span><span class="w">       </span><span class="m">505</span><span class="w">           </span>mmap
+<span class="w">  </span><span class="m">1</span>.22<span class="w">    </span><span class="m">0</span>.016958<span class="w">          </span><span class="m">54</span><span class="w">       </span><span class="m">312</span><span class="w">           </span>openat
+<span class="w">  </span><span class="m">0</span>.59<span class="w">    </span><span class="m">0</span>.008121<span class="w">          </span><span class="m">13</span><span class="w">       </span><span class="m">624</span><span class="w">           </span>getdents
+<span class="w">  </span><span class="m">0</span>.00<span class="w">    </span><span class="m">0</span>.000018<span class="w">           </span><span class="m">9</span><span class="w">         </span><span class="m">2</span><span class="w">           </span>write
+<span class="w">  </span><span class="m">0</span>.00<span class="w">    </span><span class="m">0</span>.000003<span class="w">           </span><span class="m">0</span><span class="w">         </span><span class="m">4</span><span class="w">           </span>fcntl
+<span class="w">  </span><span class="m">0</span>.00<span class="w">    </span><span class="m">0</span>.000000<span class="w">           </span><span class="m">0</span><span class="w">         </span><span class="m">1</span><span class="w">           </span>epoll_create1
+------<span class="w"> </span>-----------<span class="w"> </span>-----------<span class="w"> </span>---------<span class="w"> </span>---------<span class="w"> </span>----------------
+<span class="m">100</span>.00<span class="w">    </span><span class="m">1</span>.386380<span class="w">                 </span><span class="m">73317</span><span class="w">      </span><span class="m">7922</span><span class="w"> </span>total
+</pre></div>
+</div>
+</div>
+<p>strace shows the number of file system calls. In this case we count
+file system operations.</p>
+<ol class="arabic simple" start="3">
+<li><p><strong>Example reading a single archive sequentially</strong></p></li>
+</ol>
+<p>This example reads the same data from the tar archive. An
+uncompressed tar file is essentially just a concatenation of the
+contents of the files.</p>
+<p>We use the streaming mode for reading the archive. This means the
+files have to be read in order. Otherwise we would still generate A
+large number of file system calls.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">strace</span> <span class="o">-</span><span class="n">c</span> <span class="o">-</span><span class="n">e</span> <span class="n">trace</span><span class="o">=%</span><span class="n">desc</span> <span class="n">python</span> <span class="n">read_archive</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">expected result</p>
+<p>This one should be faster and do fewer file reads. In my case it
+takes 1.1 seconds and opens 588 files.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Time<span class="w"> </span>taken:<span class="w"> </span><span class="m">1</span>.0703248977661133<span class="w"> </span>seconds
+Mean:<span class="w"> </span><span class="m">2</span>.4964045698924733
+%<span class="w"> </span><span class="nb">time</span><span class="w">     </span>seconds<span class="w">  </span>usecs/call<span class="w">     </span>calls<span class="w">    </span>errors<span class="w"> </span>syscall
+------<span class="w"> </span>-----------<span class="w"> </span>-----------<span class="w"> </span>---------<span class="w"> </span>---------<span class="w"> </span>----------------
+<span class="w"> </span><span class="m">27</span>.39<span class="w">    </span><span class="m">0</span>.075740<span class="w">         </span><span class="m">128</span><span class="w">       </span><span class="m">588</span><span class="w">        </span><span class="m">22</span><span class="w"> </span>open
+<span class="w"> </span><span class="m">20</span>.90<span class="w">    </span><span class="m">0</span>.057777<span class="w">          </span><span class="m">22</span><span class="w">      </span><span class="m">2516</span><span class="w">           </span><span class="nb">read</span>
+<span class="w"> </span><span class="m">15</span>.91<span class="w">    </span><span class="m">0</span>.043988<span class="w">          </span><span class="m">42</span><span class="w">      </span><span class="m">1027</span><span class="w">           </span>fstat
+<span class="w"> </span><span class="m">15</span>.58<span class="w">    </span><span class="m">0</span>.043066<span class="w">          </span><span class="m">67</span><span class="w">       </span><span class="m">638</span><span class="w">           </span>close
+<span class="w">  </span><span class="m">8</span>.59<span class="w">    </span><span class="m">0</span>.023747<span class="w">          </span><span class="m">25</span><span class="w">       </span><span class="m">926</span><span class="w">         </span><span class="m">3</span><span class="w"> </span>lseek
+<span class="w">  </span><span class="m">4</span>.80<span class="w">    </span><span class="m">0</span>.013264<span class="w">          </span><span class="m">25</span><span class="w">       </span><span class="m">511</span><span class="w">           </span>mmap
+<span class="w">  </span><span class="m">4</span>.45<span class="w">    </span><span class="m">0</span>.012307<span class="w">          </span><span class="m">26</span><span class="w">       </span><span class="m">463</span><span class="w">       </span><span class="m">456</span><span class="w"> </span>ioctl
+<span class="w">  </span><span class="m">1</span>.48<span class="w">    </span><span class="m">0</span>.004104<span class="w">          </span><span class="m">57</span><span class="w">        </span><span class="m">71</span><span class="w">           </span>openat
+<span class="w">  </span><span class="m">0</span>.90<span class="w">    </span><span class="m">0</span>.002500<span class="w">          </span><span class="m">17</span><span class="w">       </span><span class="m">142</span><span class="w">           </span>getdents
+<span class="w">  </span><span class="m">0</span>.00<span class="w">    </span><span class="m">0</span>.000007<span class="w">           </span><span class="m">3</span><span class="w">         </span><span class="m">2</span><span class="w">           </span>write
+<span class="w">  </span><span class="m">0</span>.00<span class="w">    </span><span class="m">0</span>.000005<span class="w">           </span><span class="m">1</span><span class="w">         </span><span class="m">4</span><span class="w">           </span>fcntl
+<span class="w">  </span><span class="m">0</span>.00<span class="w">    </span><span class="m">0</span>.000000<span class="w">           </span><span class="m">0</span><span class="w">         </span><span class="m">1</span><span class="w">           </span>epoll_create1
+------<span class="w"> </span>-----------<span class="w"> </span>-----------<span class="w"> </span>---------<span class="w"> </span>---------<span class="w"> </span>----------------
+<span class="m">100</span>.00<span class="w">    </span><span class="m">0</span>.276505<span class="w">                  </span><span class="m">6889</span><span class="w">       </span><span class="m">481</span><span class="w"> </span>total
+</pre></div>
+</div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p><strong>Random access</strong></p></li>
+</ol>
+<p>Say we need to read the files in randomized order. This is common
+in training machine learning models. In this case reading from the
+the archive is not that helpful, since we cannot stream the
+contents.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Tar is actually a bad format for this. A tar file is always
+read sequentially. But independent of the file format, reading
+files in random order is slow on a network file system.</p>
+<p>Still, this is better than reading many small files.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">strace</span> <span class="o">-</span><span class="n">c</span> <span class="o">-</span><span class="n">e</span> <span class="n">trace</span><span class="o">=%</span><span class="n">desc</span> <span class="n">python</span> <span class="n">read_archive_random</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">expected result</p>
+<p>This should be slower than sequantial reading, but not create
+as many file reads as reading the files individually. In my case,
+it took 3.2 seconds and opened 591 files.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Time<span class="w"> </span>taken:<span class="w"> </span><span class="m">3</span>.1685996055603027<span class="w"> </span>seconds
+Mean:<span class="w"> </span><span class="m">2</span>.4964045698924733
+%<span class="w"> </span><span class="nb">time</span><span class="w">     </span>seconds<span class="w">  </span>usecs/call<span class="w">     </span>calls<span class="w">    </span>errors<span class="w"> </span>syscall
+------<span class="w"> </span>-----------<span class="w"> </span>-----------<span class="w"> </span>---------<span class="w"> </span>---------<span class="w"> </span>----------------
+<span class="w"> </span><span class="m">24</span>.14<span class="w">    </span><span class="m">0</span>.091852<span class="w">         </span><span class="m">155</span><span class="w">       </span><span class="m">591</span><span class="w">        </span><span class="m">22</span><span class="w"> </span>open
+<span class="w"> </span><span class="m">21</span>.52<span class="w">    </span><span class="m">0</span>.081871<span class="w">          </span><span class="m">78</span><span class="w">      </span><span class="m">1038</span><span class="w">           </span><span class="nb">read</span>
+<span class="w"> </span><span class="m">14</span>.97<span class="w">    </span><span class="m">0</span>.056972<span class="w">          </span><span class="m">55</span><span class="w">      </span><span class="m">1031</span><span class="w">           </span>fstat
+<span class="w"> </span><span class="m">13</span>.78<span class="w">    </span><span class="m">0</span>.052431<span class="w">          </span><span class="m">81</span><span class="w">       </span><span class="m">641</span><span class="w">           </span>close
+<span class="w"> </span><span class="m">13</span>.64<span class="w">    </span><span class="m">0</span>.051899<span class="w">           </span><span class="m">1</span><span class="w">     </span><span class="m">30693</span><span class="w">         </span><span class="m">3</span><span class="w"> </span>lseek
+<span class="w">  </span><span class="m">5</span>.23<span class="w">    </span><span class="m">0</span>.019895<span class="w">          </span><span class="m">38</span><span class="w">       </span><span class="m">511</span><span class="w">           </span>mmap
+<span class="w">  </span><span class="m">3</span>.89<span class="w">    </span><span class="m">0</span>.014816<span class="w">          </span><span class="m">31</span><span class="w">       </span><span class="m">467</span><span class="w">       </span><span class="m">460</span><span class="w"> </span>ioctl
+<span class="w">  </span><span class="m">1</span>.86<span class="w">    </span><span class="m">0</span>.007093<span class="w">          </span><span class="m">99</span><span class="w">        </span><span class="m">71</span><span class="w">           </span>openat
+<span class="w">  </span><span class="m">0</span>.96<span class="w">    </span><span class="m">0</span>.003658<span class="w">          </span><span class="m">25</span><span class="w">       </span><span class="m">142</span><span class="w">           </span>getdents
+<span class="w">  </span><span class="m">0</span>.00<span class="w">    </span><span class="m">0</span>.000018<span class="w">           </span><span class="m">9</span><span class="w">         </span><span class="m">2</span><span class="w">           </span>write
+<span class="w">  </span><span class="m">0</span>.00<span class="w">    </span><span class="m">0</span>.000005<span class="w">           </span><span class="m">1</span><span class="w">         </span><span class="m">4</span><span class="w">           </span>fcntl
+<span class="w">  </span><span class="m">0</span>.00<span class="w">    </span><span class="m">0</span>.000003<span class="w">           </span><span class="m">3</span><span class="w">         </span><span class="m">1</span><span class="w">           </span>epoll_create1
+------<span class="w"> </span>-----------<span class="w"> </span>-----------<span class="w"> </span>---------<span class="w"> </span>---------<span class="w"> </span>----------------
+<span class="m">100</span>.00<span class="w">    </span><span class="m">0</span>.380513<span class="w">                 </span><span class="m">35192</span><span class="w">       </span><span class="m">485</span><span class="w"> </span>total
+</pre></div>
+</div>
+</div>
+<p>This is not great. How would you avoid reading the files out of
+order?</p>
+<p>In this case, the whole data fits in memory. Even if it didn’t,
+it’s usually good enough to read the file in chunks and shuffle the
+chunks in memory.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">strace</span> <span class="o">-</span><span class="n">c</span> <span class="o">-</span><span class="n">e</span> <span class="n">trace</span><span class="o">=%</span><span class="n">desc</span> <span class="n">python</span> <span class="n">read_random_chunked</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">expected result</p>
+<p>This should be as fast as the sequential read and read only a few
+files.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Time<span class="w"> </span>taken:<span class="w"> </span><span class="m">1</span>.112762212753296<span class="w"> </span>seconds
+Mean:<span class="w"> </span><span class="m">2</span>.4964045698924733
+%<span class="w"> </span><span class="nb">time</span><span class="w">     </span>seconds<span class="w">  </span>usecs/call<span class="w">     </span>calls<span class="w">    </span>errors<span class="w"> </span>syscall
+------<span class="w"> </span>-----------<span class="w"> </span>-----------<span class="w"> </span>---------<span class="w"> </span>---------<span class="w"> </span>----------------
+<span class="w"> </span><span class="m">29</span>.36<span class="w">    </span><span class="m">0</span>.109168<span class="w">         </span><span class="m">185</span><span class="w">       </span><span class="m">588</span><span class="w">        </span><span class="m">22</span><span class="w"> </span>open
+<span class="w"> </span><span class="m">19</span>.42<span class="w">    </span><span class="m">0</span>.072187<span class="w">          </span><span class="m">28</span><span class="w">      </span><span class="m">2518</span><span class="w">           </span><span class="nb">read</span>
+<span class="w"> </span><span class="m">16</span>.78<span class="w">    </span><span class="m">0</span>.062369<span class="w">          </span><span class="m">97</span><span class="w">       </span><span class="m">638</span><span class="w">           </span>close
+<span class="w"> </span><span class="m">14</span>.71<span class="w">    </span><span class="m">0</span>.054685<span class="w">          </span><span class="m">53</span><span class="w">      </span><span class="m">1027</span><span class="w">           </span>fstat
+<span class="w">  </span><span class="m">7</span>.06<span class="w">    </span><span class="m">0</span>.026230<span class="w">          </span><span class="m">28</span><span class="w">       </span><span class="m">926</span><span class="w">         </span><span class="m">3</span><span class="w"> </span>lseek
+<span class="w">  </span><span class="m">5</span>.35<span class="w">    </span><span class="m">0</span>.019879<span class="w">          </span><span class="m">38</span><span class="w">       </span><span class="m">512</span><span class="w">           </span>mmap
+<span class="w">  </span><span class="m">3</span>.32<span class="w">    </span><span class="m">0</span>.012342<span class="w">          </span><span class="m">26</span><span class="w">       </span><span class="m">463</span><span class="w">       </span><span class="m">456</span><span class="w"> </span>ioctl
+<span class="w">  </span><span class="m">2</span>.51<span class="w">    </span><span class="m">0</span>.009336<span class="w">         </span><span class="m">131</span><span class="w">        </span><span class="m">71</span><span class="w">           </span>openat
+<span class="w">  </span><span class="m">1</span>.49<span class="w">    </span><span class="m">0</span>.005554<span class="w">          </span><span class="m">39</span><span class="w">       </span><span class="m">142</span><span class="w">           </span>getdents
+<span class="w">  </span><span class="m">0</span>.00<span class="w">    </span><span class="m">0</span>.000011<span class="w">           </span><span class="m">2</span><span class="w">         </span><span class="m">4</span><span class="w">           </span>fcntl
+<span class="w">  </span><span class="m">0</span>.00<span class="w">    </span><span class="m">0</span>.000007<span class="w">           </span><span class="m">7</span><span class="w">         </span><span class="m">1</span><span class="w">           </span>epoll_create1
+<span class="w">  </span><span class="m">0</span>.00<span class="w">    </span><span class="m">0</span>.000000<span class="w">           </span><span class="m">0</span><span class="w">         </span><span class="m">2</span><span class="w">           </span>write
+------<span class="w"> </span>-----------<span class="w"> </span>-----------<span class="w"> </span>---------<span class="w"> </span>---------<span class="w"> </span>----------------
+<span class="m">100</span>.00<span class="w">    </span><span class="m">0</span>.371768<span class="w">                  </span><span class="m">6892</span><span class="w">       </span><span class="m">481</span><span class="w"> </span>total
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The strace output is not very readable. There are not many tools for
+parsing it into something more human readable. Here are a couple of
+examples we found:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/cniethammer/strace-analyzer/">https://github.com/cniethammer/strace-analyzer/</a>:
+Written in <a class="reference external" href="https://www.rust-lang.org">Rust</a>, so you
+need to <a class="reference external" href="https://www.rust-lang.org/tools/install">install Rust</a> first.</p></li>
+<li><p><a class="reference external" href="https://github.com/wookietreiber/strace-analyzer">https://github.com/wookietreiber/strace-analyzer</a>:
+Written in Python, but not as a package. Clone the repository to run
+the scripts.</p></li>
+</ul>
+</div>
+</section>
+<section id="i-o-workflows">
+<h2>I/O Workflows<a class="headerlink" href="#i-o-workflows" title="Permalink to this heading"></a></h2>
+<section id="shared-and-network-file-systems">
+<h3>Shared and Network File Systems<a class="headerlink" href="#shared-and-network-file-systems" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>How does a network file system work? What is Lustre? What happens
+when I ask for the contents of a file?</p></li>
+</ul>
+</div></blockquote>
+<div class="dropdown admonition">
+<p class="admonition-title">Explanation of shared network filesystems</p>
+<p>In high-performance clusters the file system is actually multiple
+metadata and object storage servers. This makes it possible to
+to store huge amounts of data with minimal risk of data loss in
+a case of a hardware failure and to provide access to the data
+with good throughput.</p>
+<figure class="align-default" id="id3">
+<img alt="../_images/lustre_explanation.svg" src="../_images/lustre_explanation.svg" /><figcaption>
+<p><span class="caption-text">Figure 3: Structure of a Lustre filesystem.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Typical file access requires the filesystem client to ask the
+metadata servers where the file’s data is stored and whether
+the user has sufficient rights to access the file.</p>
+<p>After this call is finished the file system client can contact
+the object storage server for the file contents. In both calls
+the server in question has to load the relevant
+metadata or data from disks that contain the data.</p>
+<p>These file systems are usually connected to compute nodes with a
+high speed interconnect, but each filesystem call will have some
+latency involved with it.</p>
+<p>Minimizing the number of file system calls and making sure that
+the program reads data in large chunks is the optimal way of
+accessing files in these systems.</p>
+</div>
+</section>
+<section id="file-system-is-slow">
+<h3>File System is Slow<a class="headerlink" href="#file-system-is-slow" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul>
+<li><p>Even a normal file system is generally much slower than a RAM,
+CPUs or GPUs. Computations have to wait for many cycles for each
+I/O operation.</p>
+<div class="dropdown admonition">
+<p class="admonition-title">Typical transfer speeds</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/List_of_interface_bit_rates">Interface bit rates</a>
+for different interfaces:</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>Interface</strong></p></td>
+<td><p><strong>Approximate bandwidth</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Hard drive</p></td>
+<td><p>0.6 GB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>NVMe SSD</p></td>
+<td><p>4-16 GB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>High-speed interconnect</p></td>
+<td><p>10-25 GB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>RAM memory</p></td>
+<td><p>10-50 GB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>GPU VRAM memory</p></td>
+<td><p>80-3500 GB/s</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><p>Network file systems and shared file systems and have even more
+latency. Performance also depends on what other users are doing.</p></li>
+<li><p>Bad I/O hampers interactive use. Waiting for a file to load can
+be frustrating.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul>
+<li><p>Order of operations: Reading a file many times because the
+function is called in a loop.</p>
+<p>This is often hidden by a function call, maybe even to a library. This can be about understanding what libraries do, and using them correctly.</p>
+</li>
+<li><p>Accumulation: A bad IO pattern might not seem bad when simulation is run with a single computer or deep learning model is trained for one epoch (single pass through all the data). But in a larger scale or with a longer run, inefficiencies and bad access patterns accumulate.</p>
+<p>Essentially, 10% of a big number is still pretty big. Since file systems are a shared resource and usually not reserved for a job, it’s possible to congest the whole system.</p>
+</li>
+<li><p>Carrying everything with you: All of the data is loaded, when only part of it is needed.</p>
+<p>Everything is kept in RAM and takes space. The job might not need all the resources it seems to need.</p>
+</li>
+<li><p>Wrong Format: Data format is chosen
+when the amount of data is small, or for inspection and plotting.
+The format is not optimal for the actual use case.</p>
+<p>A profiler can detect I/O patterns and this can be useful for identifying
+bottlenecks. However, this is mostly a workflow issue. Thinking through the
+workflow steps and testing them in isolation is often the best approach.</p>
+<p>Human readable data formats (CSVs, .txt, .json) are good when human is reading the
+file contents with an editor. If they are processed by code using binary formats can
+improve code’s efficiency.</p>
+</li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<section id="local-disks-and-ram-disks">
+<h2>Local Disks and RAM Disks<a class="headerlink" href="#local-disks-and-ram-disks" title="Permalink to this heading"></a></h2>
+<section id="local-disks">
+<h3>Local Disks<a class="headerlink" href="#local-disks" title="Permalink to this heading"></a></h3>
+<ul>
+<li><p>Some systems have local disks on nodes. These are connected directly
+to the node and are much faster than network file systems.</p></li>
+<li><p>Check your system documentation for the local disk path.</p></li>
+<li><p>Local disks are usually not persistent. You need to copy data to
+to the local disk at the beginning of a job and copy results back
+at the end</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>unzip<span class="w"> </span>-d<span class="w"> </span>/tmp/data<span class="w"> </span>data.zip
+
+python<span class="w"> </span>train_model.py<span class="w"> </span>--data<span class="w"> </span>/tmp/data
+
+cp<span class="w"> </span>-r<span class="w"> </span>/tmp/results<span class="w"> </span>results
+</pre></div>
+</div>
+</li>
+<li><p>Try creating and reading a large file locally and on lustre</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">time</span><span class="w"> </span>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>largefile<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1024M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">50</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Try reading the large file</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">time</span><span class="w"> </span>md5sum<span class="w"> </span>largefile
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="ramdisk">
+<h3>Ramdisk<a class="headerlink" href="#ramdisk" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>/dev/shm/ in linux</p></li>
+<li><p>A file system directly in random access memory. This is very fast,
+but limited by the available memory</p></li>
+<li><p>Reserve enough memory when queueing the job</p></li>
+</ul>
+</section>
+</section>
+<section id="machine-learning-and-large-data">
+<h2>Machine Learning and Large data<a class="headerlink" href="#machine-learning-and-large-data" title="Permalink to this heading"></a></h2>
+<p>Training large machine learning models requires a lot of data.
+Storing and accessing the data can easily become a bottleneck. It’s
+easy to starve the GPUs for data just because accessing the input
+files on disk is too slow.</p>
+<p>This is usually further complicated by the fact that in each
+training epoch all of the data needs to be loaded in random
+order. To deal around this problem different frameworks have created
+their own data formats, but they work in similar ways.</p>
+<p>Typically large datasets are split into shards, where each shard
+contains some random piece of the full dataset. Shards can be up to
+multiple gigabytes in size.</p>
+<p>When data is read during training multiple threads are usually used
+to read the shards. Each thread loads data from random shard in
+sequential order and shuffles the data in memory. Data is then
+collected to master thread that creates a batch of data from inputs
+of all data loaders.</p>
+<figure class="align-default" id="id4">
+<img alt="../_images/sharded_dataloading.svg" src="../_images/sharded_dataloading.svg" /><figcaption>
+<p><span class="caption-text">Figure 4: An example of a sharded data loading pipeline</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Webdataset does this for PyTorch. It uses the POSIX tar format,
+making it easy to handle on most HPC systems.</p>
+<p>Demo in the webdataset folder.</p>
+<ol class="arabic simple">
+<li><p>Creating a dataset</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>create_dataset.py
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Reading a sharded dataset</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>imagenet.py
+</pre></div>
+</div>
+<p>Note that the data does not need to be downlaoded and stored
+locally for webdataset. The library can also handle http addresses
+directly, and has a protocol for general UNIX pipes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">wds</span><span class="o">.</span><span class="n">WebDataset</span><span class="p">(</span><span class="s2">&quot;filename.tar&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>is equivalent to</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">wds</span><span class="o">.</span><span class="n">WebDataset</span><span class="p">(</span><span class="s2">&quot;pipe:cat filename.tar&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This makes webdataset very general and flexible. Unfortunately,
+though, the data needs to be stored in a tar file.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading"></a></h2>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Link</p></li>
+<li><p>Link</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../memory/" class="btn btn-neutral float-left" title="Measuring and choosing the right amount of memory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../exercises/" class="btn btn-neutral float-right" title="Exercises" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

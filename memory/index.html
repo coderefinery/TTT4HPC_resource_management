@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Measuring and choosing the right amount of memory &mdash; Real-life compute cluster workflows  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_lesson.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/term_role_formatting.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_rtd_theme_ext_color_contrast.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+
+  
+    <link rel="shortcut icon" href="../_static/coderefinery.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="I/O Best Practices" href="../io-best-practices/" />
+    <link rel="prev" title="How to choose the number of cores by timing a series of runs" href="../num-cores/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../" class="icon icon-home">
+            Real-life compute cluster workflows
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Episodes</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../scheduling/">Job scheduling and Slurm basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../num-cores/">How to choose the number of cores by timing a series of runs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Measuring and choosing the right amount of memory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#why-it-matters">Why it matters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-a-test-job-before-running-many-similar-jobs">Run a test job before running many similar jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-get-more-memory-if-you-need-it">How to get more memory if you need it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-code">Example code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#finding-the-memory-high-water-mark-by-prepending-with-usr-bin-time-v">Finding the memory high-water mark by prepending with /usr/bin/time -v</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#finding-the-memory-high-water-mark-with-sacct">Finding the memory high-water mark with sacct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sometimes-the-answer-is-not-more-memory-but-to-rewrite-the-code">Sometimes the answer is not more memory but to rewrite the code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../io-best-practices/">I/O Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../exercises/">Exercises</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For helpers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../testing/">How to test this lesson</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Real-life compute cluster workflows</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Measuring and choosing the right amount of memory</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/coderefinery/content/blob/main/content/memory.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="measuring-and-choosing-the-right-amount-of-memory">
+<span id="memory"></span><h1>Measuring and choosing the right amount of memory<a class="headerlink" href="#measuring-and-choosing-the-right-amount-of-memory" title="Permalink to this heading"></a></h1>
+<section id="why-it-matters">
+<h2>Why it matters<a class="headerlink" href="#why-it-matters" title="Permalink to this heading"></a></h2>
+<p>This is because memory and CPU are not completely independent. If I ask for too
+much memory, I also block the compute resources which carry that memory
+resource at the same time.</p>
+<p>A too generous “better safe than sorry” approach to memory allocation leads to these problems:</p>
+<ul class="simple">
+<li><p>Your compute account <strong>gets charged too much</strong> (problem for you and your
+allocation group, as well as for the tax payer financing these compute
+resources)</p></li>
+<li><p>Other users have to <strong>wait longer with their jobs</strong> (problem for us and for other users)</p></li>
+<li><p>Your <strong>jobs may queue much longer</strong> (problem for you) because the scheduler does
+not know that you might use a lot less memory than you ask it to reserve for you</p></li>
+<li><p>The <strong>possibility to parallelize your job/workflow may be severely limited</strong> if
+you ask for excessive amount of unused memory since there may not be enough
+memory left for parallel jobs running at the same time</p></li>
+</ul>
+<p>It is important to make sure that your jobs use the right amount of memory
+(below we show how to find out) and <a class="reference internal" href="../num-cores/#num-cores"><span class="std std-ref">the right number of CPUs</span></a> in order to help you and others using the HPC
+machines utilize these resources more efficiently, and in turn get work done
+more speedily.</p>
+<p>If you ask for too little memory, your job will be stopped and it might be
+stopped late in the run.</p>
+</section>
+<section id="run-a-test-job-before-running-many-similar-jobs">
+<h2>Run a test job before running many similar jobs<a class="headerlink" href="#run-a-test-job-before-running-many-similar-jobs" title="Permalink to this heading"></a></h2>
+<p>We recommend users to run a test job before submitting many similar runs to the
+queue system and find out how much memory is used (see below for examples on
+how to do that).  <strong>Once you know, add perhaps 15-20% extra memory</strong> (and runtime)
+for the job compared to what your representative test case needed.</p>
+</section>
+<section id="how-to-get-more-memory-if-you-need-it">
+<h2>How to get more memory if you need it<a class="headerlink" href="#how-to-get-more-memory-if-you-need-it" title="Permalink to this heading"></a></h2>
+<p>Speaking of right partition, one way to get more memory if a node is not enough
+is to spread the job over several nodes by asking for more cores than needed.
+But this comes at the price of paying for more resources, queuing longer, and
+possibly blocking others.</p>
+<p>A good alternative for jobs that need a lot of memory is often to use
+high-memory nodes or high-memory partitions which are designed for jobs with
+high memory demand.</p>
+</section>
+<section id="example-code">
+<h2>Example code<a class="headerlink" href="#example-code" title="Permalink to this heading"></a></h2>
+<p>We can use the following example code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<span class="c1"># parse the command line arguments</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+    <span class="s2">&quot;--size&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;How many numbers to sum up&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+    <span class="s2">&quot;--seconds&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;For how many seconds to wait&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+
+<span class="c1"># generate a bunch of random numbers</span>
+<span class="n">random_numbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span>
+
+<span class="c1"># wait for few seconds, specified by --seconds</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">seconds</span><span class="p">)</span>
+
+<span class="c1"># sum up and print the result</span>
+<span class="n">result</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">random_numbers</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Example run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python<span class="w"> </span>example.py<span class="w"> </span>--size<span class="o">=</span><span class="m">5000</span><span class="w"> </span>--seconds<span class="o">=</span><span class="m">5</span>
+
+<span class="go">Result: -47.64438375296812</span>
+</pre></div>
+</div>
+<p>This code run generates 5000 random numbers between -1 and 1, then waits for 5
+seconds, and then sums up the numbers.</p>
+</section>
+<section id="finding-the-memory-high-water-mark-by-prepending-with-usr-bin-time-v">
+<h2>Finding the memory high-water mark by prepending with /usr/bin/time -v<a class="headerlink" href="#finding-the-memory-high-water-mark-by-prepending-with-usr-bin-time-v" title="Permalink to this heading"></a></h2>
+<div class="admonition-our-goal admonition">
+<p class="admonition-title">Our goal</p>
+<p>Now we want to measure how much memory this one consumes:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>example.py<span class="w"> </span>--size<span class="o">=</span><span class="m">50000000</span><span class="w"> </span>--seconds<span class="o">=</span><span class="m">10</span>
+</pre></div>
+</div>
+</div>
+<p>In your job script instead of running <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">example.py</span> <span class="pre">...</span></code> directly, prepend it with <code class="docutils literal notranslate"><span class="pre">/usr/bin/time</span> <span class="pre">-v</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env bash</span>
+
+<span class="c1">#SBATCH --account=MYPROJECT</span>
+<span class="c1">#SBATCH --job-name=&#39;mem-profiling&#39;</span>
+<span class="c1">#SBATCH --time=0-00:05:00</span>
+<span class="c1">#SBATCH --mem-per-cpu=2500M</span>
+<span class="c1">#SBATCH --ntasks=1</span>
+
+<span class="c1"># instead of this:</span>
+<span class="c1">#                python example.py --size=50000000 --seconds=10</span>
+
+<span class="c1"># we do this:</span>
+<span class="hll"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">time</span> <span class="o">-</span><span class="n">v</span> <span class="n">python</span> <span class="n">example</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">size</span><span class="o">=</span><span class="mi">50000000</span> <span class="o">--</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span>
+</span></pre></div>
+</div>
+<p>Then in the Slurm output we find:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Command</span> <span class="n">being</span> <span class="n">timed</span><span class="p">:</span> <span class="s2">&quot;python example.py --size=50000000 --seconds=10&quot;</span>
+<span class="n">User</span> <span class="n">time</span> <span class="p">(</span><span class="n">seconds</span><span class="p">):</span> <span class="mf">54.44</span>
+<span class="n">System</span> <span class="n">time</span> <span class="p">(</span><span class="n">seconds</span><span class="p">):</span> <span class="mf">1.27</span>
+<span class="n">Percent</span> <span class="n">of</span> <span class="n">CPU</span> <span class="n">this</span> <span class="n">job</span> <span class="n">got</span><span class="p">:</span> <span class="mi">84</span><span class="o">%</span>
+<span class="n">Elapsed</span> <span class="p">(</span><span class="n">wall</span> <span class="n">clock</span><span class="p">)</span> <span class="n">time</span> <span class="p">(</span><span class="n">h</span><span class="p">:</span><span class="n">mm</span><span class="p">:</span><span class="n">ss</span> <span class="ow">or</span> <span class="n">m</span><span class="p">:</span><span class="n">ss</span><span class="p">):</span> <span class="mi">1</span><span class="p">:</span><span class="mf">05.97</span>
+<span class="n">Average</span> <span class="n">shared</span> <span class="n">text</span> <span class="n">size</span> <span class="p">(</span><span class="n">kbytes</span><span class="p">):</span> <span class="mi">0</span>
+<span class="n">Average</span> <span class="n">unshared</span> <span class="n">data</span> <span class="n">size</span> <span class="p">(</span><span class="n">kbytes</span><span class="p">):</span> <span class="mi">0</span>
+<span class="n">Average</span> <span class="n">stack</span> <span class="n">size</span> <span class="p">(</span><span class="n">kbytes</span><span class="p">):</span> <span class="mi">0</span>
+<span class="n">Average</span> <span class="n">total</span> <span class="n">size</span> <span class="p">(</span><span class="n">kbytes</span><span class="p">):</span> <span class="mi">0</span>
+<span class="hll"><span class="n">Maximum</span> <span class="n">resident</span> <span class="nb">set</span> <span class="n">size</span> <span class="p">(</span><span class="n">kbytes</span><span class="p">):</span> <span class="mi">1993080</span>
+</span><span class="n">Average</span> <span class="n">resident</span> <span class="nb">set</span> <span class="n">size</span> <span class="p">(</span><span class="n">kbytes</span><span class="p">):</span> <span class="mi">0</span>
+<span class="n">Major</span> <span class="p">(</span><span class="n">requiring</span> <span class="n">I</span><span class="o">/</span><span class="n">O</span><span class="p">)</span> <span class="n">page</span> <span class="n">faults</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">Minor</span> <span class="p">(</span><span class="n">reclaiming</span> <span class="n">a</span> <span class="n">frame</span><span class="p">)</span> <span class="n">page</span> <span class="n">faults</span><span class="p">:</span> <span class="mi">417312</span>
+<span class="n">Voluntary</span> <span class="n">context</span> <span class="n">switches</span><span class="p">:</span> <span class="mi">41</span>
+<span class="n">Involuntary</span> <span class="n">context</span> <span class="n">switches</span><span class="p">:</span> <span class="mi">144</span>
+<span class="n">Swaps</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">File</span> <span class="n">system</span> <span class="n">inputs</span><span class="p">:</span> <span class="mi">3</span>
+<span class="n">File</span> <span class="n">system</span> <span class="n">outputs</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">Socket</span> <span class="n">messages</span> <span class="n">sent</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">Socket</span> <span class="n">messages</span> <span class="n">received</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">Signals</span> <span class="n">delivered</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">Page</span> <span class="n">size</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">):</span> <span class="mi">4096</span>
+<span class="n">Exit</span> <span class="n">status</span><span class="p">:</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>The relevant information in this context is “Maximum resident set size
+(kbytes)”, in this case 1993080 kB. Note
+that it has to be <code class="docutils literal notranslate"><span class="pre">/usr/bin/time</span> <span class="pre">-v</span></code> and <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">-v</span></code> alone will not do it.</p>
+</section>
+<section id="finding-the-memory-high-water-mark-with-sacct">
+<h2>Finding the memory high-water mark with sacct<a class="headerlink" href="#finding-the-memory-high-water-mark-with-sacct" title="Permalink to this heading"></a></h2>
+<p>As an example, I want to know this for my job which had the number <code class="docutils literal notranslate"><span class="pre">11166863</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sacct<span class="w"> </span>-j<span class="w"> </span><span class="m">11166863</span><span class="w"> </span>--format<span class="o">=</span>MaxRSS
+
+<span class="go">    MaxRSS</span>
+<span class="go">----------</span>
+
+<span class="go">  1985340K</span>
+<span class="go">         0</span>
+</pre></div>
+</div>
+<p>But now try to reduce the size parameter to <code class="docutils literal notranslate"><span class="pre">--size=5000000</span></code> (one zero got removed).
+Then rerun the job and compare the result from <code class="docutils literal notranslate"><span class="pre">/usr/bin/time</span> <span class="pre">-v</span></code> and
+<code class="docutils literal notranslate"><span class="pre">sacct</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/usr/bin/time</span> <span class="pre">-v</span></code> will give you ca. 200 MB</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sacct</span></code> might give <strong>zero</strong> as result</p></li>
+</ul>
+<p>The reason for the zero result is the sampling rate of <code class="docutils literal notranslate"><span class="pre">sacct</span></code>. Now increase
+the seconds parameter to <code class="docutils literal notranslate"><span class="pre">--seconds=40</span></code> and compare the two again.</p>
+<div class="admonition-conclusions admonition">
+<p class="admonition-title">Conclusions</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/usr/bin/time</span> <span class="pre">-v</span></code> is more accurate and gives you the high-water mark.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sacct</span></code> is good for a rough estimate but is sampled typically every 30 seconds and might miss the peak.</p></li>
+<li><p>Once you know the high-water mark, add 15-20% extra memory for the job.</p></li>
+</ul>
+</div>
+</section>
+<section id="sometimes-the-answer-is-not-more-memory-but-to-rewrite-the-code">
+<h2>Sometimes the answer is not more memory but to rewrite the code<a class="headerlink" href="#sometimes-the-answer-is-not-more-memory-but-to-rewrite-the-code" title="Permalink to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This section might only make sense if you use Python. Skip it
+otherwise.</p>
+</div>
+<p>Change the “[random.uniform…]” to “(random.uniform…)” in the highlighted line below.
+Only two characters need to be changed, but the memory usage will be drastically reduced:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<span class="c1"># parse the command line arguments</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+    <span class="s2">&quot;--size&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;How many numbers to sum up&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+    <span class="s2">&quot;--seconds&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;For how many seconds to wait&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+
+<span class="c1"># generate a bunch of random numbers</span>
+<span class="hll"><span class="n">random_numbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span>
+</span>
+<span class="c1"># wait for few seconds, specified by --seconds</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">seconds</span><span class="p">)</span>
+
+<span class="c1"># sum up and print the result</span>
+<span class="n">result</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">random_numbers</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now measure the memory high-water mark again and you will observe a massively
+reduced memory usage.  Can you explain why?</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../num-cores/" class="btn btn-neutral float-left" title="How to choose the number of cores by timing a series of runs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../io-best-practices/" class="btn btn-neutral float-right" title="I/O Best Practices" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
