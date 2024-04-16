@@ -89,7 +89,7 @@ for parameter in parameters:
 ## Exercise 2.2
 
 Find an example machine learning training script in
-<https://github.com/coderefinery/meteorological-data-processing-exercise>.
+<https://github.com/coderefinery/CIFAR100_example>.
 The data used is small enough to run on most systems, and the workflow
 is not especially problematic from I/O perspectice.
 
