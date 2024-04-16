@@ -416,13 +416,13 @@ Local Disks
   to the local disk at the beginning of a job and copy results back
   at the end
 
-.. code-block:: bash
-
-   unzip -d /tmp/data data.zip
-
-   python train_model.py --data /tmp/data
-
-   cp -r /tmp/results results
+  .. code-block:: bash
+  
+     unzip -d /tmp/data data.zip
+  
+     python train_model.py --data /tmp/data
+  
+     cp -r /tmp/results results
 
 
 - Try creating and reading a large file locally and on lustre
