@@ -1,6 +1,6 @@
 # Exercises
 
-```{admonition} Virtual environments
+``````{admonition} Virtual environments
   It's a good idea to run the exercises in a virtual environment. This way
   you avoid conflicts between the dependencies for difference exercises and
   your project.
@@ -38,7 +38,7 @@
       ```
     ````
   `````
-```
+``````
 
 
 
