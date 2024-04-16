@@ -18,8 +18,8 @@ void generate_random_numbers(float *numbers, int num_numbers, float min,
   }
 }
 
-// like the move_planets_closer function but using px, py, pz arrays
-// and the velocities vx, vy, vz
+// adjust velocities and positions for a batch of planets based on the positions
+// of all other planets
 void move_planets(float *px, float *py, float *pz, float *vx, float *vy,
                   float *vz, float *px_all, float *py_all, float *pz_all,
                   float *masses, float dt, int num_planets_this_task,
